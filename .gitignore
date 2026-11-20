@@ -1,0 +1,38 @@
+# Arquivos que NÃO vão para o repositório público do GitHub
+
+# Anotações internas do projeto (usadas pelo Claude Code, ficam só neste computador)
+CLAUDE.md
+SUPABASE-DRIVE.md
+.claude/
+
+# Configurações do editor (contêm caminhos deste computador)
+.vscode/
+
+# Senhas e chaves (nunca publicar)
+.env
+.env.*
+
+# Fotos originais guardadas antes de retoques (só neste computador)
+originais/
+
+# Backups, documentos e planilhas
+*.bak
+*.orig
+*.tmp
+*.zip
+*.rar
+*.7z
+*.doc
+*.docx
+*.xls
+*.xlsx
+*.csv
+*.pdf
+
+# Lixo do sistema
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Dependências (caso algum dia use npm)
+node_modules/
