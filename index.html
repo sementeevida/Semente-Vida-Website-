@@ -33,7 +33,7 @@
 <style>
 :root{
   --navy:#173a63; --navy-deep:#0e2747; --navy-ink:#1d3557;
-  --gold:#ecbb4f; --gold-deep:#d9a134; --ochre:#8f6823;
+  --gold:#ecbb4f; --gold-deep:#d9a134; --ochre:#84601f;
   --cream:#fbf7ef; --cream-2:#f4ecdc; --sand:#efe3cc;
   --text:#2c3b4d; --muted:#5b6878;
   --serif:"Crimson Pro",Georgia,serif;
@@ -65,6 +65,9 @@ button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
 .nav a{position:relative;padding:6px 0;white-space:nowrap}
 .nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--gold-deep);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
 .nav a:hover::after,.nav a.active::after{transform:scaleX(1)}
+.nav a.da-dir::after{transform-origin:right}
+.nav-faisca{position:fixed;z-index:60;pointer-events:none}
+.nav-faisca svg{display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0 1.2px #fff) drop-shadow(0 0 1.2px #fff) drop-shadow(0 0 3px rgba(255,255,255,.9))}
 .btn-hours{white-space:nowrap;display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:var(--navy-deep);font-size:13px;font-weight:700;padding:10px 18px;border-radius:999px;box-shadow:0 4px 14px rgba(217,161,52,.35);transition:transform .25s,box-shadow .25s}
 .btn-hours .ic-cal{width:17px;height:17px;flex-shrink:0}
 .btn-hours:hover{box-shadow:0 8px 22px rgba(217,161,52,.45)}
@@ -122,7 +125,7 @@ button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
 @keyframes wordIn{to{opacity:1;transform:none;filter:none}}
 .brand-ds img{height:56px;width:auto}
 .header .brand.brand-ds img{height:calc(56px - 10px*var(--enc,0));width:auto;transition:none}
-.hero-logo{width:min(440px,84vw);transition:transform .6s var(--ease)}
+.hero-logo{width:min(440px,84vw)}
 .hero-logo .logo-in{display:block;opacity:0;animation:logoIn 1.3s .2s var(--ease) forwards}
 .hero-logo svg{shape-rendering:geometricPrecision;display:block;width:100%;height:auto;overflow:visible}
 .hero-logo.auto{animation:logoSway 7s 1.6s ease-in-out infinite}
@@ -194,7 +197,7 @@ section{position:relative}
 .reveal-r.in{opacity:1;transform:none}
 .ajudar-r.reveal-r{transition:opacity 2.3s var(--ease),transform 1.6s var(--ease)}
 .ajudar-r.reveal-r:not(.in){transform:translateX(110px)}
-@media (max-width:760px){.ajudar-r.reveal-r:not(.in){transform:translateY(80px)}}
+@media (max-width:1180px){.ajudar-r.reveal-r:not(.in){transform:translateY(80px)}}  /* celular e tablet (bloco embaixo do texto): entra de baixo para cima; computador: da direita */
 @media (max-width:760px){#mapa.reveal{transition:opacity 1.9s var(--ease),transform 1.9s var(--ease)}#mapa.reveal:not(.in){transform:translateY(80px)}}
 .reveal.de-esq:not(.in){transform:translateX(-70px)}
 .reveal.de-dir:not(.in){transform:translateX(70px)}
@@ -280,10 +283,22 @@ section{position:relative}
 }
 @media (min-width:1081px) and (max-width:1250px){.ativ-corpo{grid-template-columns:minmax(0,.85fr) minmax(0,1.3fr)}}
 @media (max-width:1080px){.ativ-corpo .agenda-inline{margin:44px auto 0;max-width:640px}}
+/* Botão Expandir (só no computador): redondo, só com o ícone, à direita da fitinha rosa; abre o pop-up de horários */
+.ag-expandir{display:none}
+@media (min-width:761px){
+  .ag-expandir{position:absolute;top:40px;right:16px;z-index:2;width:40px;height:40px;display:grid;place-items:center;padding:0;border:1.5px solid #ecbb4f;background:#fff;color:var(--navy);border-radius:50%;cursor:pointer;transition:background .2s,transform .2s}
+  .ag-expandir:hover,.ag-expandir:focus-visible{background:#f6e3a8;transform:scale(1.06)}
+  .ag-expandir svg{width:18px;height:18px}
+}
 .acard-link{cursor:pointer}
+/* título do cartão de Atividades como botão, sem mudar a aparência (o destaque de teclado aparece só com Tab) */
+.acard-btn{font:inherit;color:inherit;letter-spacing:inherit;line-height:inherit;text-align:inherit;background:none;border:0;padding:0;margin:0;cursor:pointer}
+.acard-btn:focus-visible{outline:3px solid var(--gold);outline-offset:4px;border-radius:6px}
 .pisca-ag{animation:piscaAg 2s linear 1}
-@keyframes piscaAg{0%,30%,100%{background-color:transparent;box-shadow:0 0 0 0 rgba(236,187,79,0);animation-timing-function:ease-in-out}15%,45%,70%{background-color:rgba(246,212,122,.7);box-shadow:0 0 0 3px rgba(236,187,79,.55);animation-timing-function:ease-in-out}}
-.at.pisca-ag,.note.pisca-ag{border-radius:10px}
+/* contorno por dentro (inset): não invade a linha vizinha */
+@keyframes piscaAg{0%,30%,100%{background-color:transparent;box-shadow:inset 0 0 0 0 rgba(236,187,79,0);animation-timing-function:ease-in-out}15%,45%,70%{background-color:rgba(246,212,122,.7);box-shadow:inset 0 0 0 2px rgba(217,161,52,.7);animation-timing-function:ease-in-out}}
+.note.pisca-ag{border-radius:10px}
+.pisca-caixa{position:absolute;z-index:-1;border-radius:10px;pointer-events:none}
 .acard{text-align:center;cursor:default}
 .acard .pic{position:relative;aspect-ratio:1.25;margin-bottom:16px}
 .acard .pic::before{content:"";position:absolute;inset:-5% -4% 4% 6%;background:var(--sand);border-radius:60% 40% 50% 50%/50% 60% 40% 50%;transition:transform .6s var(--ease)}
@@ -346,7 +361,8 @@ section{position:relative}
 .way p{font-size:13.5px;color:var(--muted);line-height:1.4}
 .ways{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:28px;align-items:stretch}
 .way-txt{display:flex;flex-direction:column;align-items:center;flex:1;width:100%}
-.way-txt .btn-quero{margin-top:auto;font-family:var(--sans);cursor:pointer}
+/* position+z-index: com a placa de vídeo, o botão animado (pulso) ia para uma camada separada e o brilho dele ficava atrás do cartão branco (.way::before) */
+.way-txt .btn-quero{margin-top:auto;font-family:var(--sans);cursor:pointer;position:relative;z-index:1}
 .way-txt p{margin-bottom:12px}
 .ajudar-r .hand small{color:var(--gold);font-size:11px}
 .ig-acoes{display:flex;justify-content:center;gap:12px;margin:auto 0 8px}
@@ -354,11 +370,39 @@ section{position:relative}
 .ig-acoes svg{width:22px;height:22px}
 .way p .dest{color:var(--navy);font-weight:800}
 .way p .grifo{text-decoration:underline;text-decoration-color:#ecbb4f;text-decoration-thickness:2.5px;text-underline-offset:3px;text-decoration-skip-ink:none}
-.way p .pix::after{animation-direction:reverse}
 .ways-rodape{margin:26px auto 0;text-align:center;font-family:var(--serif);font-style:italic;font-size:19px;line-height:1.45;color:var(--navy);max-width:640px}
 .ways-rodape span{font-style:normal}
-.way p .pix{position:relative;text-align:center;line-height:1.35;overflow:hidden;isolation:isolate;display:inline-block;margin:6px 0 2px;padding:4px 12px;border-radius:10px;background:#fff6dc;border:1px dashed #ecbb4f;color:var(--navy);font-weight:600}
-.way p .pix-n{font-size:15.5px;letter-spacing:.02em;color:var(--navy);font-weight:800}
+/* Chave Pix em forma de cupom: em cima o título e o número; embaixo, separada por linha tracejada com dois recortes redondos
+   (::before/::after brancos, da cor do cartão), a faixa "Toque para copiar", que vira "Chave copiada!" (classe .copiada) */
+/* Chave Pix em forma de cupom, em duas peças (para poder "rasgar"): em cima .pix-tp (título e número; a borda de baixo é a linha do meio)
+   e embaixo .pix-rod (faixa "Toque para copiar"). Recortes redondos nas laterais da linha do meio: círculos brancos inteiros (cobrem a borda
+   lateral) com o tracejado só na metade de dentro (bordas de dois lados + rotate(45deg)). Ao copiar, a faixa vira "Chave copiada!" (.copiada)
+   e as duas peças se separam pela linha do meio com bordas em zigue-zague (.rasgado + animação no JS), depois voltam. */
+.way p .pix{position:relative;display:block;width:fit-content;max-width:100%;margin:8px auto 2px;padding:0;background:none;border:0;color:var(--navy);font:inherit;text-align:center;line-height:1.35;cursor:pointer}
+.way p .pix-tp{position:relative;overflow:hidden;isolation:isolate;display:block;padding:9px 22px 8px;background:#fff8e6;border:1.5px dashed #e6c46f;border-radius:12px 12px 0 0}
+.way p .pix-lb{display:block;font-size:10.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ochre)}
+.way p .pix-n{display:block;font-size:15.5px;letter-spacing:.02em;color:var(--navy);font-weight:800;white-space:nowrap}
+.way p .pix-rod{position:relative;isolation:isolate;display:flex;align-items:center;justify-content:center;gap:5px;padding:6px 8px 7px;background:#fff8e6;border:1.5px dashed #e6c46f;border-top:0;border-radius:0 0 12px 12px;font-size:12px;font-weight:800;color:var(--navy);transform-origin:0 0;transition:background .2s,color .2s}
+.way p .pix-rod::before,.way p .pix-rod::after{content:"";position:absolute;top:-.75px;width:14px;height:14px;border-radius:50%;background:#fff;border:1.5px dashed transparent;transform:translateY(-50%) rotate(45deg);transition:opacity .15s}
+.way p .pix-rod::before{left:-7.75px;border-top-color:#e6c46f;border-right-color:#e6c46f}
+.way p .pix-rod::after{right:-7.75px;border-bottom-color:#e6c46f;border-left-color:#e6c46f}
+.way p .pix:hover .pix-rod,.way p .pix:focus-visible .pix-rod{background:#fdf0cc}
+.way p .pix.copiada .pix-rod{color:#3f7a2c}
+/* rasgo: bordas em zigue-zague na linha do meio e recortes escondidos enquanto as peças estão separadas */
+.way p .pix.rasgado .pix-rod{clip-path:polygon(-1px 3px,0% 3px,5% 0,10% 3px,15% 0,20% 3px,25% 0,30% 3px,35% 0,40% 3px,45% 0,50% 3px,55% 0,60% 3px,65% 0,70% 3px,75% 0,80% 3px,85% 0,90% 3px,95% 0,100% 3px,calc(100% + 1px) 3px,calc(100% + 1px) calc(100% + 1px),-1px calc(100% + 1px))}
+.way p .pix.rasgado .pix-tp{clip-path:polygon(-1px -1px,calc(100% + 1px) -1px,calc(100% + 1px) calc(100% - 3px),100% calc(100% - 3px),95% 100%,90% calc(100% - 3px),85% 100%,80% calc(100% - 3px),75% 100%,70% calc(100% - 3px),65% 100%,60% calc(100% - 3px),55% 100%,50% calc(100% - 3px),45% 100%,40% calc(100% - 3px),35% 100%,30% calc(100% - 3px),25% 100%,20% calc(100% - 3px),15% 100%,10% calc(100% - 3px),5% 100%,0% calc(100% - 3px),-1px calc(100% - 3px))}
+.way p .pix.rasgado .pix-rod::before,.way p .pix.rasgado .pix-rod::after{opacity:0}
+.way p .pix-ic{display:grid;place-items:center}
+.way p .pix-ic svg{width:14px;height:14px}
+/* brilho de vidro (o mesmo do "Abrir no Maps", no sentido contrário): um em cada peça, do tamanho do cupom inteiro (a de cima se estende
+   para baixo e a de baixo para cima), para a faixa de luz passar contínua pela linha do meio. Fica atrás do texto. */
+.way p .pix-tp::after,.way p .pix-brilho::after{content:"";position:absolute;left:0;right:0;z-index:-1;pointer-events:none;
+  /* reflexo mais forte que o dos botões: o fundo do cupom é quase branco, então as faixas brancas ganham um contorno dourado leve para aparecer */
+  background:linear-gradient(105deg,transparent 0 28%,rgba(236,187,79,.17) 31.5%,rgba(255,255,255,.88) 35% 43%,rgba(236,187,79,.17) 46.5%,transparent 49% 50%,rgba(236,187,79,.12) 51.5%,rgba(255,255,255,.75) 53% 55.5%,rgba(236,187,79,.12) 57%,transparent 59%);transform:translateX(-110%);animation:polidoBtn 2.4s ease-in-out infinite reverse}
+.way p .pix-tp::after{top:0;bottom:-30px}
+.way p .pix-brilho{position:absolute;inset:0;z-index:-1;overflow:hidden;border-radius:0 0 10.5px 10.5px;pointer-events:none}
+.way p .pix-brilho::after{top:-52.5px;bottom:0}
+@media (prefers-reduced-motion:reduce){.way p .pix-tp::after,.way p .pix-brilho::after{animation:none;opacity:0}}
 .modal-box.modal-ajuda{width:min(940px,100%);padding:38px 34px 32px}
 .modal-ajuda .h2{font-size:clamp(26px,3vw,34px)}
 .ma-intro{color:var(--muted);margin-top:8px;max-width:640px}
@@ -480,11 +524,45 @@ html::-webkit-scrollbar-thumb:hover{background:#173a63}
 .hist-foto:hover::after,.hist-foto:focus-visible::after{opacity:1;transform:none}
 .hist-foto:hover img{transform:scale(1.04)}
 @media (hover:none){.hist-foto::after{opacity:.9;transform:none}}
-.lightbox{position:fixed;inset:0;z-index:2000;background:rgba(10,24,44,.88);display:grid;place-items:center;padding:4vh 4vw;opacity:0;pointer-events:none;transition:opacity .3s;cursor:pointer}
-.lightbox.on{opacity:1;pointer-events:auto}
-.lightbox img{max-width:100%;max-height:100%;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.5);transform:scale(.92);transition:transform .35s var(--ease)}
-.lightbox.on img{transform:none}
-.lightbox button{position:absolute;top:18px;right:18px;width:44px;height:44px;border-radius:50%;border:2px solid #fff;background:rgba(255,255,255,.12);color:#fff;font-size:20px;cursor:pointer}
+.hist-foto.voando::after{opacity:0;transition:none}
+/* Foto ampliada: o JS calcula o tamanho em que a foto cabe inteira (.lb-quadro) e faz ela sair da miniatura e voltar para ela */
+.lightbox{position:fixed;inset:0;z-index:2000;background:rgba(10,24,44,0);visibility:hidden;pointer-events:none;transition:background .4s,visibility 0s .45s;cursor:pointer;touch-action:none;overflow:hidden}
+.lightbox.on{background:rgba(10,24,44,.88);visibility:visible;pointer-events:auto;transition:background .4s}
+/* recado (envelope): a foto ampliada entra/sai sem transição, para emendar com o envelope (os dois usam o mesmo fundo escuro) */
+.lightbox.sem-trans,.lightbox.sem-trans *{transition:none!important}
+/* Recado ao abrir o site (envelope): camadas, de trás para a frente: .recado-svg (fundo do envelope e aba aberta), .recado-carta (carta
+   dobrada em três, em 3D), .recado-svg (bolso, aba fechada, selo e texto), botão invisível sobre o envelope e o X */
+.recado{position:fixed;inset:0;z-index:2100;background:rgba(10,24,44,.88);overflow:hidden;touch-action:none;cursor:pointer}  /* mesmo fundo escuro da foto ampliada */
+.recado[hidden]{display:none}
+.recado-svg{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.recado-carta{position:absolute;visibility:hidden;perspective:1800px;transform-origin:50% 50%;filter:drop-shadow(0 18px 34px rgba(0,0,0,.38));pointer-events:none}
+.rc-painel{position:absolute;left:0;width:100%;transform-style:preserve-3d}
+.rc-cima{transform-origin:50% 100%}
+.rc-baixo{transform-origin:50% 0}
+.rc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background-repeat:no-repeat}
+.rc-cima .rc-frente{border-radius:12px 12px 0 0}
+.rc-baixo .rc-frente{border-radius:0 0 12px 12px}
+.rc-verso{transform:rotateX(180deg);background:repeating-linear-gradient(-38deg,rgba(111,159,210,.45) 0 1.4px,transparent 1.4px 6px),#fdf6e3;border:2px solid #3d4f6e;border-radius:6px}
+.recado-abrir{position:absolute;padding:0;border:0;border-radius:14px;background:transparent;cursor:pointer}
+.recado-abrir:focus-visible{outline:3px solid #ecbb4f;outline-offset:8px}
+.recado-x{z-index:3}
+.recado.voando .recado-svg,.recado.voando .recado-carta,.recado.voando .recado-abrir,.recado.voando .recado-x{display:none}
+.lb-quadro{position:absolute;left:0;top:0}
+.lightbox img{display:block;width:100%;height:100%;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.5);cursor:default;transition:transform .25s var(--ease)}
+.lightbox.zoom img{cursor:grab}
+.lightbox img.arrastando{transition:none;cursor:grabbing}
+/* X da foto ampliada e do recado: mesmo modelo dos botões de zoom (círculo escuro translúcido, borda fina clara, desfoque, ícone de traço) */
+.lb-fechar,.recado-x{position:absolute;top:18px;right:18px;width:50px;height:50px;padding:0;display:grid;place-items:center;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:rgba(10,24,44,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:#fff;cursor:pointer;transition:background .2s,opacity .25s}
+.lb-fechar:hover,.recado-x:hover{background:rgba(255,255,255,.18)}
+.lb-fechar svg,.recado-x svg{width:20px;height:20px}
+.lb-fechar{z-index:2;opacity:0}
+.lb-zoom{position:absolute;left:50%;bottom:16px;z-index:2;transform:translateX(-50%);display:flex;align-items:center;gap:2px;padding:4px;border-radius:999px;background:rgba(10,24,44,.55);border:1px solid rgba(255,255,255,.35);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);cursor:default;opacity:0;transition:opacity .25s}
+.lightbox.on .lb-fechar,.lightbox.on .lb-zoom{opacity:1}
+.lb-zoom button{width:40px;height:40px;border:0;border-radius:50%;background:transparent;color:#fff;display:grid;place-items:center;cursor:pointer;transition:background .2s,opacity .2s}
+.lb-zoom button:hover:not(:disabled){background:rgba(255,255,255,.18)}
+.lb-zoom button:disabled{opacity:.35;cursor:default}
+.lb-zoom svg{width:20px;height:20px}
+.lb-pct{min-width:52px;text-align:center;color:#fff;font:700 14px var(--sans);font-variant-numeric:tabular-nums}
 @media (prefers-reduced-motion:reduce){.hist-dir,.hist-esq{animation:none}}
 .hist-dir{float:right;width:44%;aspect-ratio:4/3;margin-left:22px;animation:flutuaA 6.5s ease-in-out infinite}
 .hist-esq{float:left;width:40%;aspect-ratio:4/3;margin-right:22px;animation:flutuaB 8s ease-in-out infinite}
@@ -607,18 +685,26 @@ html::-webkit-scrollbar-thumb:hover{background:#173a63}
 .amigas{position:relative;z-index:1;text-align:center}
 .amigas .eyebrow{justify-content:center;margin-bottom:10px}
 .amg-trilho{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);padding:14px 0 40px;margin-bottom:-26px}
-.amg-rolo{display:flex;gap:22px;width:max-content;animation:amgRola 32s linear infinite}
+.amg-rolo{display:flex;gap:22px;width:max-content;animation:amgRola 48s linear infinite}  /* 8s por logo (6 logos): com logo novo, aumentar 8s para manter a velocidade */
 .amg-trilho:hover .amg-rolo,.amg-trilho:focus-within .amg-rolo{animation-play-state:paused}
 @keyframes amgRola{to{transform:translateX(calc(-50% - 11px))}}
 .amg{flex:none;width:200px;height:104px;border-radius:18px;background:#fff;display:block;overflow:hidden;padding:14px 22px;box-shadow:0 8px 22px rgba(23,58,99,.08);transition:transform .35s var(--ease),box-shadow .35s}
-.amg img{display:block;width:100%;height:100%;min-height:0;object-fit:contain;filter:grayscale(1) opacity(.7);transition:filter .35s}
+/* o filtro (cinza → colorido) fica na moldura .amg-logo e não na <img>: animado direto na imagem, o Chrome a manda reduzida
+   pela placa de vídeo, sem suavizar, e as letras dos logos ficam serrilhadas ao passar o mouse */
+.amg-logo{display:block;width:100%;height:100%;filter:grayscale(1) opacity(.7);transition:filter .35s}
+.amg img{display:block;width:100%;height:100%;min-height:0;object-fit:contain}
 .amg:has(img[data-lugar="amiga-etv"]){padding:4px 30px 10px}
 .amg img[data-lugar="amiga-etv"]{transform:translateY(-5px)}
+/* logo bem largo e com texto pequeno (Casa Espírita Renovação): mesma largura dos outros cartões, com menos margem nas laterais para o logo ficar o maior possível */
+.amg:has(img[data-lugar="amiga-renovacao"]){padding:14px 10px}
+/* IAM: menos margem no cartão e um leve aumento para compensar o espaço vazio que já vem dentro do GIF (mesma largura dos outros cartões) */
+.amg:has(img[data-lugar="amiga-iam"]){padding:10px 8px}
+.amg img[data-lugar="amiga-iam"]{transform:scale(1.08)}
 .amg:hover,.amg:focus-visible{transform:translateY(-4px);box-shadow:0 14px 28px rgba(23,58,99,.14)}
-.amg:hover img,.amg:focus-visible img{filter:none}
-@media (hover:none){.amg img{filter:none}}
+.amg:hover .amg-logo,.amg:focus-visible .amg-logo{filter:none}
+@media (hover:none){.amg-logo{filter:none}}
 @media (max-width:760px){.amg{width:150px;height:84px;padding:10px 16px}.amg-rolo{gap:14px}@keyframes amgRola{to{transform:translateX(calc(-50% - 7px))}}}
-@media (prefers-reduced-motion:reduce){.amg-rolo{animation:none;flex-wrap:wrap;justify-content:center;width:auto}.amg-rolo .amg:nth-child(n+4){display:none}.amg-trilho{-webkit-mask-image:none;mask-image:none}}
+@media (prefers-reduced-motion:reduce){.amg-rolo{animation:none;flex-wrap:wrap;justify-content:center;width:auto}.amg-rolo .amg:nth-child(n+7){display:none}.amg-trilho{-webkit-mask-image:none;mask-image:none}}
 #contato>.wrap{position:relative;z-index:1}
 .arco-iris{position:absolute;right:0;bottom:calc(-.23 * min(600px,92vw));width:min(600px,92vw);height:auto;z-index:0;pointer-events:none;overflow:visible}
 .arco-iris .lapis path{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset var(--du) cubic-bezier(.35,.1,.35,1) var(--dl)}
@@ -680,6 +766,11 @@ form .btn-navy:hover{box-shadow:0 12px 30px rgba(23,58,99,.35)}
 .form-aviso{font-size:10.5px;line-height:1.4;font-style:italic;font-weight:600;letter-spacing:-.2px;color:var(--ochre);white-space:nowrap;min-width:0;overflow:hidden;margin:2px 0 0}
 .form-aviso.quebra{white-space:normal}
 .form-lgpd a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+/* Área de toque mínima, invisível (a aparência não muda): ícones ganham 30×30 (o espaço entre os ícones do topo é de 8 a 12px,
+   então não invadem o vizinho) e botões/links de texto ganham pelo menos 26px de altura. Recomendação de acessibilidade: 24px no mínimo. */
+.social a,.pl-btn,.cinfo a,.acts .btn-quero,.note .btn-mini,.link-arrow,.form-lgpd a{position:relative}
+.social a::before,.pl-btn::before,.cinfo .ic-link::before{content:"";position:absolute;left:50%;top:50%;width:max(100%,30px);height:max(100%,30px);transform:translate(-50%,-50%)}
+.cinfo a:not(.ic-link)::before,.acts .btn-quero::before,.note .btn-mini::before,.link-arrow::before,.form-lgpd a::before{content:"";position:absolute;left:0;right:0;top:50%;height:max(100%,26px);transform:translateY(-50%)}
 /* hCaptcha invisível: não ocupa espaço; o desafio só aparece (em janela própria) se o hCaptcha desconfiar */
 .h-captcha[data-size="invisible"]{position:absolute;width:0;height:0;overflow:hidden}
 .btn-enviar:disabled{opacity:.75;cursor:progress;transform:none!important}
@@ -807,7 +898,7 @@ footer .brand-ds img{height:60px;width:auto}
 .agenda[data-topo="e"] .topo i.t1::after{content:"";position:absolute;left:50%;top:34px;width:13px;height:13px;transform:translateX(-50%);background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M12%202.6l2.8%206.1%206.7.7-5%204.5%201.4%206.6L12%2017.1l-5.9%203.4%201.4-6.6-5-4.5%206.7-.7z%22%20fill%3D%22%23ecbb4f%22/%3E%3C/svg%3E") center/contain no-repeat}
 /* lista */
 .hours.semana{gap:0;margin-top:12px}
-.hours.semana li{display:grid;grid-template-columns:46px 1fr;align-items:center;gap:14px;padding:6px 0;border-bottom:1px dashed #e2d6bd;font-size:14px;position:relative}
+.hours.semana li{display:grid;grid-template-columns:46px 1fr;align-items:center;gap:14px;padding:6px 0;border-bottom:1px dashed #e2d6bd;font-size:14px;position:relative;isolation:isolate}
 .hours.semana li:last-child{border-bottom:0}
 .hours.semana li.today{background:linear-gradient(90deg,rgba(236,187,79,.24),rgba(236,187,79,.04));margin:0 -12px;padding:9px 12px;border-radius:12px;border-color:transparent}
 .dcol{display:flex;flex-direction:column;align-items:center;gap:5px}
@@ -827,14 +918,18 @@ footer .brand-ds img{height:60px;width:auto}
 .md svg{width:13px;height:13px}
 .md.pr{background:#e6efd9;color:#4d7629}
 .md.on{background:#dde8f6;color:#2a5f93}
+.md.rs{background:#fbe1df;color:#a3261d}
+.at.restrito .hr,.at.restrito .nm{color:#a3261d}
+.at.restrito .nm small,.at.restrito .nm small b{color:#8a4a45}
 .vazio-t{color:var(--muted);font-size:13px;font-style:italic}
 .estrela-dia{width:46px;height:46px;display:block;overflow:visible;filter:drop-shadow(0 3px 4px rgba(23,58,99,.15));transition:transform .4s var(--ease)}
 .estrela-dia text{font-family:var(--sans);font-weight:800;font-size:12.5px;letter-spacing:.02em}
 .hours.semana li:hover .estrela-dia{transform:rotate(-12deg) scale(1.08)}
 .hours.semana li.today .estrela-dia{animation:diaBrilha 2.4s ease-in-out infinite}
 @keyframes diaBrilha{0%,100%{transform:scale(1)}50%{transform:scale(1.13)}}
-.polido{animation:polido 2.4s ease-in-out infinite}
-@keyframes polido{0%,8%{transform:translateX(48px)}62%,100%{transform:translateX(-62px)}}
+/* brilho de vidro na faixa amarela do dia de hoje (antes ficava só dentro da estrela): mesmo movimento, da direita para a esquerda */
+.hoje-brilho{position:absolute;inset:0;z-index:-1;overflow:hidden;border-radius:inherit;pointer-events:none}
+.hoje-brilho::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 0 38%,rgba(255,255,255,.6) 38% 45%,transparent 45% 49%,rgba(255,255,255,.35) 49% 51.5%,transparent 51.5%);transform:translateX(-110%);animation:polidoBtn 2.4s ease-in-out infinite reverse}
 .at .nm small b{font-weight:700;color:var(--navy)}
 .at .nm small.comp{font-style:italic}
 .acts{display:flex;flex-direction:column;align-items:flex-end;gap:6px;justify-self:end}
@@ -849,7 +944,10 @@ footer .brand-ds img{height:60px;width:auto}
 .btn-quero.btn-verde{background:#6fa356;color:#fff;box-shadow:0 4px 14px rgba(111,163,86,.38);animation-name:btnPulsaVerde}
 .btn-quero.btn-verde:hover{background:#5f9147!important;box-shadow:0 0 0 4px rgba(111,163,86,.25),0 8px 22px rgba(95,145,71,.45)!important}
 @keyframes btnPulsaVerde{0%,100%{transform:scale(1);box-shadow:0 4px 14px rgba(111,163,86,.38)}50%{transform:scale(1.05);box-shadow:0 0 0 5px rgba(111,163,86,.2),0 6px 18px rgba(111,163,86,.45)}}
-@media (prefers-reduced-motion:reduce){.btn-quero,.btn-mini{animation:none}}
+/* "Quero Contribuir!" depois de copiar a Chave Pix: dois saltos e uma pausa, sem parar (mesmo ritmo do ícone do WhatsApp em Contato, waCoracao) */
+.btn-quero.chamando{animation:btnDuplo 1.8s ease-in-out infinite}
+@keyframes btnDuplo{0%,45%,100%{transform:scale(1);box-shadow:0 4px 14px rgba(217,161,52,.35)}12%{transform:scale(1.16);box-shadow:0 0 0 6px rgba(236,187,79,.3),0 8px 22px rgba(217,161,52,.5)}22%{transform:scale(1.03)}32%{transform:scale(1.13);box-shadow:0 0 0 5px rgba(236,187,79,.26),0 8px 22px rgba(217,161,52,.48)}}
+@media (prefers-reduced-motion:reduce){.btn-quero,.btn-mini,.btn-quero.chamando{animation:none}}
 @media (min-width:561px){.at .acts .md{order:-1}}
 .at .nm small.av{margin-top:3px}
 .aviso{display:inline-flex;align-items:center;gap:5px;font-style:normal;font-weight:800;font-size:11px;color:#9b2f63;background:#fbe1ec;border:1px solid #f2b9d0;border-radius:999px;padding:2px 9px 2px 7px;line-height:1.3}
@@ -902,7 +1000,8 @@ footer .brand-ds img{height:60px;width:auto}
   .at .acts.com-btn .md{font-size:0;gap:0;padding:3px 5px}
   .at .acts.com-btn .md svg{width:12px;height:12px}
 }
-@media (max-width:560px) and (max-height:760px){.at .nm small{display:none}.at+.at{padding-top:4px}.agenda .note{margin-top:3px}.agenda .h2{font-size:22px!important}}
+/* telas baixas: só aperta os espaços. Os detalhes (obra, "via Zoom"...) NUNCA são escondidos: o pop-up rola por dentro */
+@media (max-width:560px) and (max-height:760px){.at+.at{padding-top:4px}.agenda .note{margin-top:3px}.agenda .h2{font-size:22px!important}}
 @media (min-width:561px) and (max-height:960px){
   .modal:has(.agenda){padding:10px}.agenda{margin-top:6px}
   .acts{gap:4px}.btn-quero{padding:4px 12px 4px 9px;font-size:12px}
@@ -917,8 +1016,7 @@ footer .brand-ds img{height:60px;width:auto}
   .at .nm small{font-size:11.5px;line-height:1.28}
   .agenda .note{margin-top:6px}
 }
-@media (min-width:561px) and (max-height:700px){.at .nm small{display:none}}
-@media (prefers-reduced-motion:reduce){.modal.open .hours.semana li,.agenda-inline.in .hours.semana li,.hours.semana li.today .estrela-dia,.polido{animation:none}}
+@media (prefers-reduced-motion:reduce){.modal.open .hours.semana li,.agenda-inline.in .hours.semana li,.hours.semana li.today .estrela-dia,.hoje-brilho::after{animation:none}.hoje-brilho{display:none}}
 .hours li.today{background:linear-gradient(90deg,rgba(236,187,79,.22),transparent);margin:0 -12px;padding:11px 12px;border-radius:8px;border-color:transparent}
 .note{font-size:12.5px;color:var(--muted);margin-top:14px}
 .pillars{display:grid;gap:14px;margin-top:18px}
@@ -1166,6 +1264,7 @@ body.lock{overflow:hidden}
       <section class="agenda agenda-inline reveal dk-dir d2" data-topo="e" aria-labelledby="mh-t2">
     <div class="topo" aria-hidden="true"><i class="t1"></i><i class="t2"></i><i class="t3"></i></div>
     <div class="agenda-corpo">
+      <button type="button" class="ag-expandir" data-open="m-hours" aria-label="Expandir os horários" title="Expandir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M10 20H4v-6M20 4l-6.5 6.5M4 20l6.5-6.5"/></svg></button>
       <div class="eyebrow">Funcionamento</div>
       <h3 class="h2" id="mh-t2" style="font-size:32px">Nossos horários</h3>
       <ul class="hours semana" id="hoursList2"></ul>
@@ -1229,10 +1328,10 @@ body.lock{overflow:hidden}
       <h2 class="h2">Juntos, fazemos o Amor chegar mais longe</h2>
       <p style="color:var(--muted);margin-top:8px">Existem várias maneiras de se juntar a nossa corrente do bem. Escolha a que está mais ao seu alcance!</p></div>
       <div class="ways">
-        <div class="way reveal dk-sobe dl" style="--dl:0.35s"><span class="ic estrela" style="color:#fff"><svg class="st" viewBox="0 0 60 60" aria-hidden="true"><path d="M30.0 3.5 L39.1 19.0 L56.6 22.8 L44.7 36.3 L46.5 54.2 L30.0 47.0 L13.5 54.2 L15.3 36.3 L3.4 22.8 L20.9 19.0Z" fill="#c2407e" stroke="#c2407e" stroke-width="5" stroke-linejoin="round"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></span><span class="way-txt"><h3>Doações</h3><p>Contribua com <b class="dest grifo">Alimentos</b>, <b class="dest grifo">Roupas</b> e comprando de nossa <b class="dest grifo">Lojinha Virtual</b> e nosso <b class="dest grifo">Bazar Essencial</b>, ou doando qualquer valor através da nossa Chave Pix:<br><span class="pix btn-vidro">CNPJ:<br><b class="pix-n">40.195.435/0001-53</b></span></p>
+        <div class="way reveal dk-sobe dl" style="--dl:0.35s"><span class="ic estrela" style="color:#fff"><svg class="st" viewBox="0 0 60 60" aria-hidden="true"><path d="M30.0 3.5 L39.1 19.0 L56.6 22.8 L44.7 36.3 L46.5 54.2 L30.0 47.0 L13.5 54.2 L15.3 36.3 L3.4 22.8 L20.9 19.0Z" fill="#c2407e" stroke="#c2407e" stroke-width="5" stroke-linejoin="round"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20c-3.5 0-7-2.2-8.5-6.2l-.5-1.6c-.2-.7.6-1.2 1.1-.7L7 14"/><path d="M12 20c3.5 0 7-2.2 8.5-6.2l.5-1.6c.2-.7-.6-1.2-1.1-.7L17 14"/><path d="M12 16.5V9"/><path d="M12 11c0-2.6 1.8-4.3 4.6-4.3 0 2.6-1.8 4.3-4.6 4.3z"/><path d="M12 12.5c0-2.1-1.5-3.6-3.8-3.6 0 2.1 1.5 3.6 3.8 3.6z"/></svg></span><span class="way-txt"><h3>Doações</h3><p>Contribua com <b class="dest grifo">Alimentos</b>, <b class="dest grifo">Roupas</b> e comprando de nossa <b class="dest grifo">Lojinha Virtual</b> e nosso <b class="dest grifo">Bazar Essencial</b>, ou doando qualquer valor através da nossa Chave Pix:<br><button type="button" class="pix" data-pix="40195435000153" aria-label="Copiar a Chave Pix, CNPJ 40.195.435/0001-53"><span class="pix-tp"><span class="pix-lb">Chave Pix · CNPJ</span><b class="pix-n">40.195.435/0001-53</b></span><span class="pix-rod"><span class="pix-brilho" aria-hidden="true"></span><span class="pix-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="8.5" width="12" height="12" rx="2.2"/><path d="M15.5 8.5V5.7a2.2 2.2 0 0 0-2.2-2.2H5.7a2.2 2.2 0 0 0-2.2 2.2v7.6a2.2 2.2 0 0 0 2.2 2.2h2.8"/></svg></span><span class="pix-tx">Toque para copiar</span></span></button></p>
           <button class="btn-quero" type="button" data-open="m-doacoes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="8.5" width="17" height="4" rx="1"/><path d="M5 12.5v7.5h14v-7.5M12 8.5V20"/><path d="M12 8.5C10.5 5 7 4.5 7 6.6S10 8.5 12 8.5zM12 8.5c1.5-3.5 5-4 5-1.9S14 8.5 12 8.5z"/></svg>Quero Contribuir!</button></span></div>
-        <div class="way reveal dk-sobe dl" style="--dl:0.55s"><span class="ic estrela" style="color:#173a63"><svg class="st" viewBox="0 0 60 60" aria-hidden="true"><path d="M30.0 3.5 L39.1 19.0 L56.6 22.8 L44.7 36.3 L46.5 54.2 L30.0 47.0 L13.5 54.2 L15.3 36.3 L3.4 22.8 L20.9 19.0Z" fill="#f2c230" stroke="#f2c230" stroke-width="5" stroke-linejoin="round"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="7" r="2.6"/><circle cx="5.5" cy="9" r="2"/><circle cx="18.5" cy="9" r="2"/><path d="M7.5 19c0-3 2-5 4.5-5s4.5 2 4.5 5M2.5 17c0-2.2 1.3-3.6 3-3.6M21.5 17c0-2.2-1.3-3.6-3-3.6"/></svg></span><span class="way-txt"><h3>Voluntariado</h3><p>Seu Tempo, sua Alegria e o seu Carinho são bem-vindos e têm impacto incomensurável durante as ações.</p>
-          <div class="junte">Se junte a nós!</div>
+        <div class="way reveal dk-sobe dl" style="--dl:0.55s"><span class="ic estrela" style="color:#173a63"><svg class="st" viewBox="0 0 60 60" aria-hidden="true"><path d="M30.0 3.5 L39.1 19.0 L56.6 22.8 L44.7 36.3 L46.5 54.2 L30.0 47.0 L13.5 54.2 L15.3 36.3 L3.4 22.8 L20.9 19.0Z" fill="#f2c230" stroke="#f2c230" stroke-width="5" stroke-linejoin="round"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M12 5 9.04 7.96a2.17 2.17 0 0 0 0 3.08c.82.82 2.13.85 3 .07l2.07-1.9a2.82 2.82 0 0 1 3.79 0l2.96 2.66"/><path d="m18 15-2-2"/><path d="m15 18-2-2"/></svg></span><span class="way-txt"><h3>Voluntariado</h3><p>Seu Tempo, sua Alegria e o seu Carinho são bem-vindos e têm impacto incomensurável durante as ações.</p>
+          <div class="junte">Junte-se a nós!</div>
           <a class="btn-quero" target="_blank" rel="noopener noreferrer" href="https://wa.me/5511996473791?text=Oi%2C%20eu%20estou%20entrando%20em%20contato%20atrav%C3%A9s%20do%20site%20do%20Sementinha.%20Queria%20saber%20como%20funciona%20para%20se%20tornar%20volunt%C3%A1rio%20na%20Casa%20ou%20nas%20A%C3%A7%C3%B5es."><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2A9.7 9.7 0 0 0 3.6 16.8L2.3 21.7l5-1.3A9.7 9.7 0 1 0 12 2.2zm0 17.7a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 19.9zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8 1c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.7.3 2.8 2.8 0 0 0-.9 2.1 4.9 4.9 0 0 0 1 2.6 11.2 11.2 0 0 0 4.3 3.8c1.6.7 2.2.7 3 .6a2.5 2.5 0 0 0 1.7-1.2 2 2 0 0 0 .1-1.2c0-.1-.2-.2-.4-.3z"/></svg>Quero ser Voluntário!</a></span></div>
         <div class="way reveal dk-sobe dl" style="--dl:0.75s"><span class="ic estrela" style="color:#fff"><svg class="st" viewBox="0 0 60 60" aria-hidden="true"><path d="M30.0 3.5 L39.1 19.0 L56.6 22.8 L44.7 36.3 L46.5 54.2 L30.0 47.0 L13.5 54.2 L15.3 36.3 L3.4 22.8 L20.9 19.0Z" fill="#3b72b5" stroke="#3b72b5" stroke-width="5" stroke-linejoin="round"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M21 3L3 10.5l7 2.5 2.5 7z"/><path d="M21 3L10 13"/></svg></span><span class="way-txt"><h3>Divulgação</h3><p>Ajude <b class="dest">Curtindo</b>, <b class="dest">Comentando</b>, <b class="dest">Repostando</b>, <b class="dest">Compartilhando</b> e <b class="dest">Salvando</b> nosso trabalho para que ele chegue mais longe.</p>
           <div class="ig-acoes" aria-label="Curtir, Comentar, Repostar, Compartilhar e Salvar"><span title="Curtir" style="color:#3b72b5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.2a4.3 4.3 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z"/></svg></span><span title="Comentar" style="color:#3b72b5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.6a8.4 8.4 0 0 1-12.3 7.5L3.5 20.5l1.4-4.6a8.4 8.4 0 1 1 15.6-4.3z"/></svg></span><span title="Repostar" style="color:#3b72b5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 2.8l3 3-3 3"/><path d="M4 11V9a3.2 3.2 0 0 1 3.2-3.2H20"/><path d="M7 21.2l-3-3 3-3"/><path d="M20 13v2a3.2 3.2 0 0 1-3.2 3.2H4"/></svg></span><span title="Compartilhar" style="color:#3b72b5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 3L3 10.5l7 2.5 2.5 7z"/><path d="M21 3L10 13"/></svg></span><span title="Salvar" style="color:#3b72b5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5h12v17l-6-4.4-6 4.4z"/></svg></span></div>
@@ -1253,7 +1352,7 @@ body.lock{overflow:hidden}
 <section id="amigas" class="amigas-sec">
   <div class="amigas reveal" aria-labelledby="amg-t">
     <div class="eyebrow" id="amg-t">Instituições amigas</div>
-    <div class="amg-trilho"><div class="amg-rolo"><a class="amg" href="https://portalser.org/" target="_blank" rel="noopener noreferrer" title="Portal SER"><img data-lugar="amiga-ser" src="img/amigas/ser.png" width="795" height="631" alt="SER: Sociedade de Estudos e Reflexão" loading="lazy"></a><a class="amg" href="https://espiritismo.tv/" target="_blank" rel="noopener noreferrer" title="Espiritismo.tv"><img data-lugar="amiga-etv" src="img/amigas/etv.png" width="706" height="683" alt="Espiritismo.tv" loading="lazy"></a><a class="amg" href="https://usesp.org.br/" target="_blank" rel="noopener noreferrer" title="USE São Paulo"><img data-lugar="amiga-use" src="img/amigas/use.png" width="1874" height="690" alt="USE: União das Sociedades Espíritas do Estado de São Paulo" loading="lazy"></a><a class="amg" href="https://portalser.org/" target="_blank" rel="noopener noreferrer" title="Portal SER"><img data-lugar="amiga-ser" src="img/amigas/ser.png" width="795" height="631" alt="SER: Sociedade de Estudos e Reflexão" loading="lazy"></a><a class="amg" href="https://espiritismo.tv/" target="_blank" rel="noopener noreferrer" title="Espiritismo.tv"><img data-lugar="amiga-etv" src="img/amigas/etv.png" width="706" height="683" alt="Espiritismo.tv" loading="lazy"></a><a class="amg" href="https://usesp.org.br/" target="_blank" rel="noopener noreferrer" title="USE São Paulo"><img data-lugar="amiga-use" src="img/amigas/use.png" width="1874" height="690" alt="USE: União das Sociedades Espíritas do Estado de São Paulo" loading="lazy"></a><a class="amg" href="https://portalser.org/" target="_blank" rel="noopener noreferrer" title="Portal SER"><img data-lugar="amiga-ser" src="img/amigas/ser.png" width="795" height="631" alt="SER: Sociedade de Estudos e Reflexão" loading="lazy"></a><a class="amg" href="https://espiritismo.tv/" target="_blank" rel="noopener noreferrer" title="Espiritismo.tv"><img data-lugar="amiga-etv" src="img/amigas/etv.png" width="706" height="683" alt="Espiritismo.tv" loading="lazy"></a><a class="amg" href="https://usesp.org.br/" target="_blank" rel="noopener noreferrer" title="USE São Paulo"><img data-lugar="amiga-use" src="img/amigas/use.png" width="1874" height="690" alt="USE: União das Sociedades Espíritas do Estado de São Paulo" loading="lazy"></a><a class="amg" href="https://portalser.org/" target="_blank" rel="noopener noreferrer" title="Portal SER"><img data-lugar="amiga-ser" src="img/amigas/ser.png" width="795" height="631" alt="SER: Sociedade de Estudos e Reflexão" loading="lazy"></a><a class="amg" href="https://espiritismo.tv/" target="_blank" rel="noopener noreferrer" title="Espiritismo.tv"><img data-lugar="amiga-etv" src="img/amigas/etv.png" width="706" height="683" alt="Espiritismo.tv" loading="lazy"></a><a class="amg" href="https://usesp.org.br/" target="_blank" rel="noopener noreferrer" title="USE São Paulo"><img data-lugar="amiga-use" src="img/amigas/use.png" width="1874" height="690" alt="USE: União das Sociedades Espíritas do Estado de São Paulo" loading="lazy"></a></div></div>
+    <div class="amg-trilho"><div class="amg-rolo"><a class="amg" href="https://portalser.org/" target="_blank" rel="noopener noreferrer" title="Portal SER"><span class="amg-logo"><img data-lugar="amiga-ser" src="img/amigas/ser.png" width="795" height="631" alt="SER: Sociedade de Estudos e Reflexão" loading="lazy"></span></a><a class="amg" href="https://espiritismo.tv/" target="_blank" rel="noopener noreferrer" title="Espiritismo.tv"><span class="amg-logo"><img data-lugar="amiga-etv" src="img/amigas/etv.png" width="706" height="683" alt="Espiritismo.tv" loading="lazy"></span></a><a class="amg" href="https://usesp.org.br/" target="_blank" rel="noopener noreferrer" title="USE - União das Sociedades Espíritas do Estado de São Paulo"><span class="amg-logo"><img data-lugar="amiga-use" src="img/amigas/use.png" width="1874" height="690" alt="USE: União das Sociedades Espíritas do Estado de São Paulo" loading="lazy"></span></a><a class="amg" href="https://www.instagram.com/renovacaocasaespirita/" target="_blank" rel="noopener noreferrer" title="Casa Espírita Renovação &amp; Associação Beneficente Nova Esperança"><span class="amg-logo"><img data-lugar="amiga-renovacao" src="img/amigas/renovacao.png" width="999" height="276" alt="Casa Espírita Renovação &amp; Associação Beneficente Nova Esperança" loading="lazy"></span></a><a class="amg" href="https://www.ceos.org.br" target="_blank" rel="noopener noreferrer" title="CEOS - Centro Espírita Obreiros do Senhor"><span class="amg-logo"><img data-lugar="amiga-ceos" src="img/amigas/ceos.png" width="220" height="232" alt="CEOS: Centro Espírita Obreiros do Senhor" loading="lazy"></span></a><a class="amg" href="https://www.iam.org.br" target="_blank" rel="noopener noreferrer" title="IAM - Instituição Assistencial Meimei"><span class="amg-logo"><img data-lugar="amiga-iam" src="img/amigas/iam.gif" width="500" height="198" alt="IAM: Instituição Assistencial Meimei" loading="lazy"></span></a><a class="amg" href="https://portalser.org/" target="_blank" rel="noopener noreferrer" title="Portal SER"><span class="amg-logo"><img data-lugar="amiga-ser" src="img/amigas/ser.png" width="795" height="631" alt="SER: Sociedade de Estudos e Reflexão" loading="lazy"></span></a><a class="amg" href="https://espiritismo.tv/" target="_blank" rel="noopener noreferrer" title="Espiritismo.tv"><span class="amg-logo"><img data-lugar="amiga-etv" src="img/amigas/etv.png" width="706" height="683" alt="Espiritismo.tv" loading="lazy"></span></a><a class="amg" href="https://usesp.org.br/" target="_blank" rel="noopener noreferrer" title="USE - União das Sociedades Espíritas do Estado de São Paulo"><span class="amg-logo"><img data-lugar="amiga-use" src="img/amigas/use.png" width="1874" height="690" alt="USE: União das Sociedades Espíritas do Estado de São Paulo" loading="lazy"></span></a><a class="amg" href="https://www.instagram.com/renovacaocasaespirita/" target="_blank" rel="noopener noreferrer" title="Casa Espírita Renovação &amp; Associação Beneficente Nova Esperança"><span class="amg-logo"><img data-lugar="amiga-renovacao" src="img/amigas/renovacao.png" width="999" height="276" alt="Casa Espírita Renovação &amp; Associação Beneficente Nova Esperança" loading="lazy"></span></a><a class="amg" href="https://www.ceos.org.br" target="_blank" rel="noopener noreferrer" title="CEOS - Centro Espírita Obreiros do Senhor"><span class="amg-logo"><img data-lugar="amiga-ceos" src="img/amigas/ceos.png" width="220" height="232" alt="CEOS: Centro Espírita Obreiros do Senhor" loading="lazy"></span></a><a class="amg" href="https://www.iam.org.br" target="_blank" rel="noopener noreferrer" title="IAM - Instituição Assistencial Meimei"><span class="amg-logo"><img data-lugar="amiga-iam" src="img/amigas/iam.gif" width="500" height="198" alt="IAM: Instituição Assistencial Meimei" loading="lazy"></span></a><a class="amg" href="https://portalser.org/" target="_blank" rel="noopener noreferrer" title="Portal SER"><span class="amg-logo"><img data-lugar="amiga-ser" src="img/amigas/ser.png" width="795" height="631" alt="SER: Sociedade de Estudos e Reflexão" loading="lazy"></span></a><a class="amg" href="https://espiritismo.tv/" target="_blank" rel="noopener noreferrer" title="Espiritismo.tv"><span class="amg-logo"><img data-lugar="amiga-etv" src="img/amigas/etv.png" width="706" height="683" alt="Espiritismo.tv" loading="lazy"></span></a><a class="amg" href="https://usesp.org.br/" target="_blank" rel="noopener noreferrer" title="USE - União das Sociedades Espíritas do Estado de São Paulo"><span class="amg-logo"><img data-lugar="amiga-use" src="img/amigas/use.png" width="1874" height="690" alt="USE: União das Sociedades Espíritas do Estado de São Paulo" loading="lazy"></span></a><a class="amg" href="https://www.instagram.com/renovacaocasaespirita/" target="_blank" rel="noopener noreferrer" title="Casa Espírita Renovação &amp; Associação Beneficente Nova Esperança"><span class="amg-logo"><img data-lugar="amiga-renovacao" src="img/amigas/renovacao.png" width="999" height="276" alt="Casa Espírita Renovação &amp; Associação Beneficente Nova Esperança" loading="lazy"></span></a><a class="amg" href="https://www.ceos.org.br" target="_blank" rel="noopener noreferrer" title="CEOS - Centro Espírita Obreiros do Senhor"><span class="amg-logo"><img data-lugar="amiga-ceos" src="img/amigas/ceos.png" width="220" height="232" alt="CEOS: Centro Espírita Obreiros do Senhor" loading="lazy"></span></a><a class="amg" href="https://www.iam.org.br" target="_blank" rel="noopener noreferrer" title="IAM - Instituição Assistencial Meimei"><span class="amg-logo"><img data-lugar="amiga-iam" src="img/amigas/iam.gif" width="500" height="198" alt="IAM: Instituição Assistencial Meimei" loading="lazy"></span></a><a class="amg" href="https://portalser.org/" target="_blank" rel="noopener noreferrer" title="Portal SER"><span class="amg-logo"><img data-lugar="amiga-ser" src="img/amigas/ser.png" width="795" height="631" alt="SER: Sociedade de Estudos e Reflexão" loading="lazy"></span></a><a class="amg" href="https://espiritismo.tv/" target="_blank" rel="noopener noreferrer" title="Espiritismo.tv"><span class="amg-logo"><img data-lugar="amiga-etv" src="img/amigas/etv.png" width="706" height="683" alt="Espiritismo.tv" loading="lazy"></span></a><a class="amg" href="https://usesp.org.br/" target="_blank" rel="noopener noreferrer" title="USE - União das Sociedades Espíritas do Estado de São Paulo"><span class="amg-logo"><img data-lugar="amiga-use" src="img/amigas/use.png" width="1874" height="690" alt="USE: União das Sociedades Espíritas do Estado de São Paulo" loading="lazy"></span></a><a class="amg" href="https://www.instagram.com/renovacaocasaespirita/" target="_blank" rel="noopener noreferrer" title="Casa Espírita Renovação &amp; Associação Beneficente Nova Esperança"><span class="amg-logo"><img data-lugar="amiga-renovacao" src="img/amigas/renovacao.png" width="999" height="276" alt="Casa Espírita Renovação &amp; Associação Beneficente Nova Esperança" loading="lazy"></span></a><a class="amg" href="https://www.ceos.org.br" target="_blank" rel="noopener noreferrer" title="CEOS - Centro Espírita Obreiros do Senhor"><span class="amg-logo"><img data-lugar="amiga-ceos" src="img/amigas/ceos.png" width="220" height="232" alt="CEOS: Centro Espírita Obreiros do Senhor" loading="lazy"></span></a><a class="amg" href="https://www.iam.org.br" target="_blank" rel="noopener noreferrer" title="IAM - Instituição Assistencial Meimei"><span class="amg-logo"><img data-lugar="amiga-iam" src="img/amigas/iam.gif" width="500" height="198" alt="IAM: Instituição Assistencial Meimei" loading="lazy"></span></a></div></div>
   </div>
 </section>
 <svg class="divider onda-viva" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true" style="color:var(--cream);background:transparent;margin-top:-70px"><g class="onda-fundo" fill="currentColor"><path d="M0 70C180 30 340 100 560 86S900 20 1100 40s260 50 340 30V120H0z"/><path transform="translate(1440 0)" d="M0 70C180 30 340 100 560 86S900 20 1100 40s260 50 340 30V120H0z"/></g><g class="onda-linha" fill="none" stroke="#d9a134" stroke-width="1.6" opacity=".9"><path d="M0 92C220 60 380 118 600 104S920 50 1120 64s250 36 320 28"/><path transform="translate(1440 0)" d="M0 92C220 60 380 118 600 104S920 50 1120 64s250 36 320 28"/></g></svg>
@@ -1475,7 +1574,7 @@ body.lock{overflow:hidden}
     <div class="ev-vazio"><div class="hand">Novos eventos estão sendo programados!</div><p>Em breve divulgaremos aqui os próximos eventos da Casa.<br>Enquanto isso, siga o nosso Instagram para nos acompanhar e não perder nada.</p><a class="btn-quero sem-pulso" target="_blank" rel="noopener noreferrer" href="https://www.instagram.com/sementeevidamongagua/"><svg aria-hidden="true"><use href="#i-ig"/></svg>Seguir no Instagram</a></div>
   </div>
 </div>
-<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Foto ampliada" aria-hidden="true"><img alt=""><button type="button" aria-label="Fechar">✕</button></div>
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Foto ampliada" aria-hidden="true"><button type="button" class="lb-fechar" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg></button><div class="lb-quadro"><img alt=""></div><div class="lb-zoom" role="group" aria-label="Zoom da foto"><button type="button" class="lb-menos" aria-label="Diminuir zoom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21M7.5 10.5h6"/></svg></button><span class="lb-pct" aria-live="polite">100%</span><button type="button" class="lb-mais" aria-label="Aumentar zoom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21M7.5 10.5h6M10.5 7.5v6"/></svg></button></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -1521,10 +1620,16 @@ body.lock{overflow:hidden}
   /* Logo do topo: acompanha o mouse sobre ela ou a inclinação do celular */
   const logo=$('#heroLogo');
   if(!reduce){
-    const tilt=(x,y)=>{logo.style.transform=`perspective(800px) rotateY(${x*14}deg) rotateX(${-y*12}deg) translate3d(${x*10}px,${y*8}px,0)`;};
+    /* o movimento é suavizado aqui, quadro a quadro, e não por transition do CSS: com transition o Chrome congela a logo
+       numa imagem enquanto anima e ela fica borrada; assim ela é redesenhada nítida. Parada, fica sem transform nenhum. */
+    let ax=0,ay=0,tx=0,ty=0,anda=false;
+    const passo=()=>{ax+=(tx-ax)*.14;ay+=(ty-ay)*.14;if(Math.abs(tx-ax)<.002&&Math.abs(ty-ay)<.002){ax=tx;ay=ty;}
+      logo.style.transform=ax||ay?`perspective(800px) rotateY(${ax*14}deg) rotateX(${-ay*12}deg) translate(${ax*10}px,${ay*8}px)`:'';
+      if(ax!==tx||ay!==ty)requestAnimationFrame(passo);else anda=false;};
+    const tilt=(x,y)=>{tx=x;ty=y;if(!anda){anda=true;requestAnimationFrame(passo);}};
     if(matchMedia('(hover:hover)').matches){
       logo.addEventListener('mousemove',e=>{const r=logo.getBoundingClientRect();tilt(Math.max(-1,Math.min(1,(e.clientX-(r.left+r.width/2))/(r.width/2))),Math.max(-1,Math.min(1,(e.clientY-(r.top+r.height/2))/(r.height/2))));});
-      logo.addEventListener('mouseleave',()=>logo.style.transform='');
+      logo.addEventListener('mouseleave',()=>tilt(0,0));
     }
     /* Celular: a logo se inclina no sentido contrário ao movimento do aparelho */
     let gotMotion=false;
@@ -1574,14 +1679,46 @@ body.lock{overflow:hidden}
    desce.addEventListener('click',()=>{const n=prox();if(n&&!noFim())ir(n);});
    sobe.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
    addEventListener('scroll',atualiza,{passive:true});addEventListener('resize',atualiza);atualiza();}
-  const links=$$('.nav a');
-  let travaSpy=0;
+  const links=[...$$('.nav a')];
+  let travaSpy=0,ultimo=-1,yAnt=scrollY;
+  /* marca o item do menu da seção atual.
+     Descendo (item novo à direita do anterior): a linha do item que sai encolhe para a esquerda e a do novo cresce da esquerda para a direita.
+     Subindo (item novo à esquerda): a que sai encolhe para a direita e a do novo cresce da direita para a esquerda (classe .da-dir nos dois).
+     Sem item no menu (seção #amigas), vale o sentido da rolagem. Depois de encolher, o item perde a .da-dir (o hover volta a crescer da esquerda). */
+  /* Faíscas do sublinhado do menu: micro-estrelinhas da mesma cor da linha, com brilho branco em volta, que saem para baixo e caem
+     como faíscas. Só na linha que abre: a ponta que avança vai soltando faíscas ao longo de toda a abertura (a linha que some não solta).
+     O JS lê a largura da linha a cada quadro (transform do ::after) para saber onde está a ponta. */
+  const FAISCA='<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M5 0L6.1 3.9 10 5 6.1 6.1 5 10 3.9 6.1 0 5 3.9 3.9Z" fill="currentColor"/></svg>';
+  const escalaLinha=a=>{const m=getComputedStyle(a,'::after').transform;return m==='none'?1:parseFloat(m.slice(7));};
+  const faisca=(x,y,cor)=>{if(y<=0||x<0||x>innerWidth)return;  /* item escondido (menu do celular fechado, cabeçalho recolhido) */
+    const e=document.createElement('span'),t=2.5+Math.random()*3.5;e.className='nav-faisca';e.innerHTML=FAISCA;
+    e.style.cssText=`left:${x-t/2}px;top:${y-t/2}px;width:${t}px;height:${t}px;color:${cor}`;document.body.appendChild(e);
+    /* sai para baixo (entre 25° e 155°) e a "gravidade" puxa no fim */
+    const ang=(25+Math.random()*130)*Math.PI/180,v=5+Math.random()*13,dx=Math.cos(ang)*v,dy=Math.sin(ang)*v,cai=9+Math.random()*14,gi=(Math.random()<.5?-1:1)*(90+Math.random()*120);
+    e.animate([{transform:'translate(0,0) scale(.5)',opacity:1},{transform:`translate(${dx*.6}px,${dy*.6+cai*.12}px) scale(1.1) rotate(${gi*.4}deg)`,opacity:1,offset:.3},
+      {opacity:.45,offset:.5},{opacity:.95,offset:.66},{transform:`translate(${dx}px,${dy+cai}px) scale(.25) rotate(${gi}deg)`,opacity:0}],
+      {duration:520+Math.random()*360,easing:'cubic-bezier(.3,.55,.6,1)'}).onfinish=()=>e.remove();};
+  /* a ponta avança rápido no começo: as faíscas são espalhadas pelo trecho que ela andou desde o último quadro (uma a cada ~6px),
+     para cobrir a linha inteira em qualquer velocidade de tela */
+  const aoAbrir=(a,dir)=>{const t0=performance.now(),cor=getComputedStyle(a,'::after').backgroundColor;let feito=0;
+    const anda=()=>{if(!a.classList.contains('active'))return;const sx=escalaLinha(a),r=a.getBoundingClientRect(),ag=performance.now();
+      if(r.width){const ate=Math.min(1,sx),px=(ate-feito)*r.width;
+        if(px>=3){const n=Math.min(6,Math.max(1,Math.round(px/6)));
+          for(let k=1;k<=n;k++){const f=feito+(ate-feito)*k/n,x=dir?r.right-r.width*f:r.left+r.width*f;faisca(x,r.bottom-1,cor);}
+          feito=ate;}}
+      if(sx<.985&&ag-t0<800)requestAnimationFrame(anda);};
+    requestAnimationFrame(anda);};
+  const marcaAtivo=(novo,subindoRolagem)=>{const ni=links.indexOf(novo),sobe=ni>=0&&ultimo>=0?ni<ultimo:!!subindoRolagem;
+    links.forEach(a=>{const on=a===novo,era=a.classList.contains('active');
+      if(on!==era){clearTimeout(a._t);a.classList.toggle('da-dir',sobe);if(!on)a._t=setTimeout(()=>a.classList.remove('da-dir'),450);else if(!reduce&&ultimo>=0)aoAbrir(a,sobe);}
+      a.classList.toggle('active',on);});
+    if(ni>=0)ultimo=ni;};
   const spy=()=>{if(Date.now()<travaSpy)return;const lim=$('.header').offsetHeight+60;const secs=$$('main section[id]');let cur=secs[0];
     secs.forEach(sec=>{if(alvoDe(sec).getBoundingClientRect().top<=lim)cur=sec;});
     if(innerHeight+scrollY>=document.documentElement.scrollHeight-4)cur=secs[secs.length-1];
-    links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur.id));};
+    const subindo=scrollY<yAnt;yAnt=scrollY;marcaAtivo(links.find(a=>a.getAttribute('href')==='#'+cur.id),subindo);};
   addEventListener('scroll',spy,{passive:true});addEventListener('resize',spy);spy();
-  links.forEach(a=>a.addEventListener('click',()=>{links.forEach(x=>x.classList.toggle('active',x===a));travaSpy=Date.now()+1200;setTimeout(spy,1250);}));
+  links.forEach(a=>a.addEventListener('click',()=>{marcaAtivo(a);travaSpy=Date.now()+1200;setTimeout(spy,1250);}));
 
   /* Revelar ao rolar */
   const ro=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');else if(e.boundingClientRect.top>0)e.target.classList.remove('in');}),{threshold:.15});
@@ -1636,7 +1773,7 @@ body.lock{overflow:hidden}
   /* Teclado: com um pop-up (ou a foto ampliada) aberto, o Tab circula só dentro dele e não "escapa" para a página atrás */
   {const FOCAVEIS='a[href],button:not([disabled]),input:not([disabled]),textarea:not([disabled]),select:not([disabled]),[tabindex]:not([tabindex="-1"])';
    document.addEventListener('keydown',e=>{if(e.key!=='Tab')return;
-     const lbx=$('#lightbox'),caixa=lbx&&lbx.classList.contains('on')?lbx:$('.modal.open');if(!caixa)return;
+     const lbx=$('#lightbox'),rc=$('.recado:not([hidden]):not(.voando)'),caixa=rc||(lbx&&lbx.classList.contains('on')?lbx:$('.modal.open'));if(!caixa)return;
      const els=[...caixa.querySelectorAll(FOCAVEIS)].filter(el=>el.getClientRects().length&&getComputedStyle(el).visibility!=='hidden');
      if(!els.length){e.preventDefault();return;}
      const pri=els[0],ult=els[els.length-1],at=document.activeElement;
@@ -1651,20 +1788,50 @@ body.lock{overflow:hidden}
     [2,'Ter','Terça-feira','#7faa46','#fff',[]],
     [3,'Qua','Quarta-feira','#c2407e','#fff',[['9h às 9h30','Evangelho do Semente',['<b>Obra:</b> O Evangelho Segundo o Espiritismo (Allan Kardec)','com Atendimento Fraterno e Passes'],'pr'],['20h às 20h30','Evangelho do Semente',['<b>Obra:</b> O Evangelho Segundo o Espiritismo (Allan Kardec)','com Atendimento Fraterno e Passes'],'pr']]],
     [4,'Qui','Quinta-feira','#e0393e','#fff',[]],
-    [5,'Sex','Sexta-feira','#3b72b5','#fff',[['20h às 21h','Estudos Doutrinários',['<b>Obras:</b> O Livro dos Médiuns (Allan Kardec) e Diretrizes de Segurança (Divaldo P. Franco e Raul Teixeira)'],'pr']]],
+    [5,'Sex','Sexta-feira','#3b72b5','#fff',[['20h às 21h','Estudos Doutrinários',['<b>Obras:</b> O Livro dos Médiuns (Allan Kardec) e Diretrizes de Segurança (Divaldo P. Franco e Raul Teixeira)'],'rs']]],
     [6,'Sáb','Sábado','#f2c230','#173a63',[['9h às 10h30','Evangelização da Família',['para Crianças, Jovens, Pais e Responsáveis'],'pr'],['11h às 12h','Grupo Musical Semente e Vida',['para Participantes da Evangelização da Família'],'pr'],['13h30 às 15h','Projeto Mãos Unidas',['<span class="aviso"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>No último Sábado de cada mês</span>'],'pr','c']]],
     [0,'Dom','Domingo','#8a5bb5','#fff',[['8h30 às 9h30','Estudo de Evangelizadores',['<b>Obra:</b> O que é Evangelização de Espíritos (Eurípedes Barsanulfo)','via Zoom, com gravação no YouTube'],'on','p']]],
   ];
   const WA='https://wa.me/5511996473791?text=',WA13='https://wa.me/5513997280981?text=',WAde=a=>/Evangelho do Semente|Mãos Unidas/.test(a)?WA13:WA;
   const WAICO='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2A9.7 9.7 0 0 0 3.6 16.8L2.3 21.7l5-1.3A9.7 9.7 0 1 0 12 2.2zm0 17.7a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 19.9zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8 1c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.7.3 2.8 2.8 0 0 0-.9 2.1 4.9 4.9 0 0 0 1 2.6 11.2 11.2 0 0 0 4.3 3.8c1.6.7 2.2.7 3 .6a2.5 2.5 0 0 0 1.7-1.2 2 2 0 0 0 .1-1.2c0-.1-.2-.2-.4-.3z"/></svg>';
   const BTN=(t,a)=>t==='p'?`<a class="btn-quero" target="_blank" rel="noopener noreferrer" href="${WAde(a)+encodeURIComponent('Oi, eu estou entrando em contato através do site do Sementinha. Queria conhecer como funciona e participar do *{}*.'.replace('{}',a))}">${WAICO}Quero participar!</a>`:t==='c'?`<a class="btn-quero" target="_blank" rel="noopener noreferrer" href="${WAde(a)+encodeURIComponent('Oi, eu estou entrando em contato através do site do Sementinha. Queria saber como funciona e contribuir de alguma maneira com o *{}*.'.replace('{}',a))}">${WAICO}Quero contribuir!</a>`:'';
-  const MOD={pr:'<span class="md pr" title="Presencial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M10 20v-5h4v5"/></svg>Presencial</span>',on:'<span class="md on" title="Online"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="12" rx="2"/><path d="M8 20h8M12 16.5V20"/></svg>Online</span>'};
+  const MOD={pr:'<span class="md pr" title="Presencial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M10 20v-5h4v5"/></svg>Presencial</span>',on:'<span class="md on" title="Online"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="12" rx="2"/><path d="M8 20h8M12 16.5V20"/></svg>Online</span>',rs:'<span class="md rs" title="Restrito: fechado ao público"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="9.5" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg>Restrito</span>'};
   const today=new Date().getDay();
-  ['hoursList','hoursList2'].forEach((id,k)=>{const el=document.getElementById(id);if(el)el.innerHTML=SEMANA.map(([n,ab,nome,cor,tx,ats])=>`<li class="${n===today?'today':''} ${ats.length?'':'vazio-li'}" aria-label="${nome}"><span class="dcol"><svg class="estrela-dia" viewBox="0 0 60 60" aria-hidden="true"><path d="${STAR}" fill="${cor}" stroke="#ecbb4f" stroke-width="1.6" stroke-linejoin="round"/>${n===today?`<clipPath id="cpHoje${k}"><path d="${STAR}"/></clipPath><g clip-path="url(#cpHoje${k})"><polygon class="polido" points="14,0 26,0 42,60 30,60" fill="#fff" opacity=".6"/><polygon class="polido p2" points="7,0 11,0 27,60 23,60" fill="#fff" opacity=".35"/></g>`:''}<text x="30" y="35.6" text-anchor="middle" fill="${tx}">${ab}</text></svg>${n===today?'<span class="hojetag">hoje</span>':''}</span><div class="ativs">${ats.length?ats.map(([h,a,d,m,b])=>`<div class="at"><span class="hr">${h}</span><span class="nm">${a}${d.map(x=>`<small class="${/^<b>Obras?:/.test(x)?'obra':(x.startsWith('<span')?'av':'comp')}">${x}</small>`).join('')}</span><span class="acts${b?' com-btn':''}">${BTN(b,a)}${MOD[m]}</span></div>`).join(''):'<span class="vazio-t">Sem atividades na casa</span>'}</div></li>`).join('');});
+  ['hoursList','hoursList2'].forEach((id,k)=>{const el=document.getElementById(id);if(el)el.innerHTML=SEMANA.map(([n,ab,nome,cor,tx,ats])=>`<li class="${n===today?'today':''} ${ats.length?'':'vazio-li'}" aria-label="${nome}">${n===today?'<span class="hoje-brilho" aria-hidden="true"></span>':''}<span class="dcol"><svg class="estrela-dia" viewBox="0 0 60 60" aria-hidden="true"><path d="${STAR}" fill="${cor}" stroke="#ecbb4f" stroke-width="1.6" stroke-linejoin="round"/><text x="30" y="35.6" text-anchor="middle" fill="${tx}">${ab}</text></svg>${n===today?'<span class="hojetag">hoje</span>':''}</span><div class="ativs">${ats.length?ats.map(([h,a,d,m,b])=>`<div class="at${m==='rs'?' restrito':''}"><span class="hr">${h}</span><span class="nm">${a}${d.map(x=>`<small class="${/^<b>Obras?:/.test(x)?'obra':(x.startsWith('<span')?'av':'comp')}">${x}</small>`).join('')}</span><span class="acts${b?' com-btn':''}">${BTN(b,a)}${MOD[m]}</span></div>`).join(''):'<span class="vazio-t">Sem atividades na casa</span>'}</div></li>`).join('');});
 
   /* Toast */
   const toast=msg=>{const el=$('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),2600);};
   const copy=async(txt,ok)=>{try{await navigator.clipboard.writeText(txt);toast(ok);}catch(e){toast('Não foi possível copiar automaticamente');}};
+  /* Chave Pix: o bloco do CNPJ inteiro copia (só os números, formato aceito por todos os bancos) */
+  /* Ao copiar: a faixa do cupom vira "Chave copiada!" com ✓ verde (ícones fixos, escritos aqui mesmo) e o cupom "rasga" pela linha
+     do meio: a faixa se solta, fica um instante separada e volta (1,5 s). Depois o site rola até o "Quero Contribuir!" do mesmo
+     cartão e, só quando a rolagem termina, o botão passa a dar dois saltos sem parar (.chamando). Antes disso ele tem o efeito
+     normal dos outros botões. Quem sai para o app do banco e volta encontra o botão pulando. */
+  {const OK_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+     RASGO=1500;
+   const botaoDe=b=>{const w=b.closest('.way');return w&&w.querySelector('.btn-quero');};
+   $$('[data-pix]').forEach(b=>{const tx=b.querySelector('.pix-tx'),ic=b.querySelector('.pix-ic'),tp=b.querySelector('.pix-tp'),rod=b.querySelector('.pix-rod'),t0=tx.textContent,i0=ic.innerHTML,bt=botaoDe(b);
+     b.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(b.dataset.pix);}catch(e){toast('Não foi possível copiar automaticamente');return;}
+       toast('Chave Pix copiada 💛');b.classList.add('copiada');tx.textContent='Chave copiada!';ic.innerHTML=OK_SVG;
+       clearTimeout(b._t);b._t=setTimeout(()=>{b.classList.remove('copiada');tx.textContent=t0;ic.innerHTML=i0;},RASGO+600);
+       if(!reduce){clearTimeout(b._r);b.classList.add('rasgado');
+         const o={duration:RASGO,easing:'cubic-bezier(.3,.7,.35,1)'};
+         tp.animate([{transform:'none'},{transform:'translateY(-2px) rotate(-.8deg)',offset:.2},{transform:'translateY(-2px) rotate(-.8deg)',offset:.72},{transform:'none'}],o);
+         rod.animate([{transform:'none'},{transform:'translate(2px,4px) rotate(1.5deg)',offset:.12},{transform:'translate(3px,8px) rotate(3.5deg)',offset:.22},{transform:'translate(3px,8px) rotate(3.5deg)',offset:.72},{transform:'none'}],o);
+         b._r=setTimeout(()=>b.classList.remove('rasgado'),RASGO-60);}
+       if(bt)setTimeout(()=>rolaSuave(bt,()=>bt.classList.add('chamando')),reduce?300:RASGO);});});
+   /* rolagem lenta e suave (1,1 a 1,6 s conforme a distância, acelera e desacelera) até deixar o botão no meio da tela; se a pessoa mexer na tela, para.
+      Cada passo usa behavior:'instant' para o scroll-behavior:smooth do html não brigar com a animação. */
+   const rolaSuave=(el,fim)=>{const r=el.getBoundingClientRect(),de=scrollY,max=document.documentElement.scrollHeight-innerHeight,
+       ate=Math.max(0,Math.min(max,de+r.top+r.height/2-innerHeight/2)),dist=ate-de;fim=fim||(()=>{});
+     if(Math.abs(dist)<4){fim();return;}if(reduce){scrollTo({top:ate,behavior:'instant'});fim();return;}
+     const dur=Math.min(1600,Math.max(1100,Math.abs(dist)*2.5)),t0=performance.now(),ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2,EVS=['wheel','touchstart','keydown','pointerdown'];let parou=false;
+     const solta=()=>EVS.forEach(ev=>removeEventListener(ev,para));
+     const para=()=>{if(parou)return;parou=true;solta();fim();};  /* a pessoa mexeu na tela: para a rolagem, mas o botão começa a pular */
+     EVS.forEach(ev=>addEventListener(ev,para,{passive:true}));
+     const passo=ag=>{if(parou)return;const k=Math.min(1,(ag-t0)/dur);scrollTo({top:de+dist*ease(k),behavior:'instant'});
+       if(k<1)requestAnimationFrame(passo);else{parou=true;solta();fim();}};
+     requestAnimationFrame(passo);};}
 
   /* Como ajudar → pré-preenche contato */
   const msgs={
@@ -1772,8 +1939,8 @@ body.lock{overflow:hidden}
   const driveOk=id=>typeof id==='string'&&/^[\w-]{10,200}$/.test(id);
   /* o Drive recusa (erro 429) pedidos que dizem vir de alguns endereços, como localhost: as imagens do Drive vão sempre com referrerPolicy="no-referrer" */
   const driveUrl=(id,larg)=>'https://drive.google.com/thumbnail?id='+encodeURIComponent(id)+'&sz=w'+(larg||1600);
-  /* o Drive transforma SVG em PNG e o WebP animado em GIF: esses ficam sempre com o arquivo local */
-  const SO_LOCAL=/\.(svg|webp)$/i;
+  /* o Drive transforma SVG em PNG, o WebP animado em GIF e o GIF animado em imagem parada: esses ficam sempre com o arquivo local */
+  const SO_LOCAL=/\.(svg|webp|gif)$/i;
   const CAMPOS_IMG='drive_id,nome_arquivo,texto_alternativo,largura,altura,pode_baixar';
   /* pode_baixar do banco decide se a imagem pode ser salva (mesma proteção do bloco acima) */
   const regraBaixar=(im,pode)=>{if(pode){im.dataset.download='permitido';im.draggable=true;}else{delete im.dataset.download;im.draggable=false;}};
@@ -1805,16 +1972,84 @@ body.lock{overflow:hidden}
      .then(lista=>{const mapa=new Map(lista.map(l=>[l.chave,l.imagem]));fixas.forEach(im=>troca(im,mapa.get(im.dataset.lugar)));})
      .catch(e=>console.warn('[supabase] imagens fixas ficaram locais:',e.name==='AbortError'?'sem resposta em 8 s':e.message));}
 
-  /* Fotos do pop-up Nossa história: ampliar */
-  {const lb=$('#lightbox'),li=lb.querySelector('img');
-    const abre=f=>{const im=f.querySelector('img');li.referrerPolicy=im.referrerPolicy||'';li.src=im.dataset.grande||im.src;li.alt=im.alt;  /* galeria: versão grande do Drive */
+  /* Foto ampliada (Nossa História, galeria e cartazes de eventos).
+     - Sai da miniatura e cresce até caber inteira na tela (nunca passa da tela, nem foto bem comprida); ao fechar, volta para a miniatura.
+     - Abre com a miniatura que já está carregada e troca pela versão grande do Drive quando ela chegar. Ao fechar, a foto é apagada,
+       então a próxima nunca mostra a anterior por um instante.
+     - Zoom de 100% a 200%: lupas de menos e mais, ou pinça no celular. Com zoom, dá para arrastar a foto.
+     - Fecha no X, no Esc ou tocando fora da foto (tocar na foto não fecha). */
+  {const lb=$('#lightbox'),QD=lb.querySelector('.lb-quadro'),li=QD.querySelector('img'),BX=lb.querySelector('.lb-fechar'),ZM=lb.querySelector('.lb-zoom'),
+      MENOS=ZM.querySelector('.lb-menos'),MAIS=ZM.querySelector('.lb-mais'),PCT=ZM.querySelector('.lb-pct');
+    const NIVEIS=[1,1.5,2],EASE='cubic-bezier(.2,.75,.25,1)',RAIO='12px';
+    let cx=null,razao=1,z=1,px=0,py=0,vez=0,anim=null,gesto=0;
+    /* tamanho e posição em que a foto cabe inteira, sem distorcer, com espaço embaixo para os botões de zoom */
+    const medida=r=>{const mx=Math.max(12,innerWidth*.04),topo=Math.max(14,innerHeight*.04),aw=innerWidth-2*mx,ah=innerHeight-topo-76;
+      let w=aw,h=w/r;if(h>ah){h=ah;w=h*r;}
+      return {w,h,x:(innerWidth-w)/2,y:topo+(ah-h)/2};};
+    lb._mede=medida;  /* o envelope do recado usa para a carta se desdobrar exatamente onde a foto ampliada vai aparecer */
+    const posiciona=()=>{cx=medida(razao);Object.assign(QD.style,{width:cx.w+'px',height:cx.h+'px',left:cx.x+'px',top:cx.y+'px'});};
+    /* posição da miniatura, para a foto grande sair dela (recortada igual à miniatura, que usa object-fit:cover) */
+    const naTela=f=>{if(!f||!f.isConnected)return false;const a=f.getBoundingClientRect();return a.width>0&&a.bottom>0&&a.top<innerHeight&&a.right>0&&a.left<innerWidth;};
+    const daMiniatura=f=>{const a=f.getBoundingClientRect(),{w,h,x,y}=cx,s=Math.max(a.width/w,a.height/h),ix=Math.max(0,(w-a.width/s)/2),iy=Math.max(0,(h-a.height/s)/2),
+      r=(parseFloat(getComputedStyle(f).borderTopLeftRadius)||0)/s;
+      return {transform:`translate(${a.left+a.width/2-(x+w/2)}px,${a.top+a.height/2-(y+h/2)}px) scale(${s})`,clipPath:`inset(${iy}px ${ix}px round ${r}px)`};};
+    const CHEIA={transform:'none',clipPath:`inset(0px 0px round ${RAIO})`};
+    /* zoom: a foto não pode sair da tela a ponto de sobrar fundo de um lado e faltar foto do outro */
+    const faixa=(c,t,v)=>t>v?[v-(c+t/2),-(c-t/2)]:[0,0];
+    const aplica=()=>{if(cx){const [ax,bx]=faixa(cx.x+cx.w/2,cx.w*z,innerWidth),[ay,by]=faixa(cx.y+cx.h/2,cx.h*z,innerHeight);px=Math.min(bx,Math.max(ax,px));py=Math.min(by,Math.max(ay,py));}
+      li.style.transform=z>1?`translate(${px}px,${py}px) scale(${z})`:'';lb.classList.toggle('zoom',z>1);
+      PCT.textContent=Math.round(z*100)+'%';MENOS.disabled=z<=1.001;MAIS.disabled=z>=1.999;};
+    const zoomPara=nz=>{nz=Math.min(2,Math.max(1,nz));const k=nz/z;px*=k;py*=k;z=nz;if(z===1)px=py=0;aplica();};
+    MENOS.addEventListener('click',()=>zoomPara([...NIVEIS].reverse().find(n=>n<z-.01)||1));
+    MAIS.addEventListener('click',()=>zoomPara(NIVEIS.find(n=>n>z+.01)||2));
+    /* op (opcional, usado pelo envelope do recado): semAnim (aparece sem animação),
+       pronto() (chamado quando a foto já está na tela) e aoFechar(retângulo) (substitui a animação normal de fechar) */
+    const abre=(f,op)=>{op=op||{};lb._op=op;const im=f.querySelector('img'),v=++vez;anim&&anim.cancel();
+      razao=im.naturalWidth&&im.naturalHeight?im.naturalWidth/im.naturalHeight:(+im.getAttribute('width')/+im.getAttribute('height'))||4/3;
+      z=1;px=py=0;aplica();QD.style.visibility='hidden';
+      li.referrerPolicy=im.referrerPolicy||'';li.alt=im.alt;li.src=im.currentSrc||im.src;
       /* a foto ampliada herda a regra da original: fotos da galeria podem ser baixadas, as outras não */
-      if(im.dataset.download==='permitido'){li.dataset.download='permitido';li.draggable=true;}else{delete li.dataset.download;li.draggable=false;}lb.classList.add('on');lb.setAttribute('aria-hidden','false');lb._volta=f;lb.querySelector('button').focus({preventScroll:true});};
+      if(im.dataset.download==='permitido'){li.dataset.download='permitido';li.draggable=true;}else{delete li.dataset.download;li.draggable=false;}
+      lb._volta=f;
+      /* galeria e eventos: versão grande do Drive, trocada só depois de pronta */
+      const grande=im.dataset.grande;
+      if(grande&&grande!==li.src){const p=new Image();p.referrerPolicy=li.referrerPolicy;p.onload=()=>Promise.resolve(p.decode&&p.decode()).catch(()=>{}).then(()=>{if(v===vez)li.src=grande;});p.src=grande;}
+      const mostra=()=>{if(v!==vez)return;posiciona();aplica();QD.style.visibility='';
+        if(op.semAnim)lb.classList.add('sem-trans');
+        lb.classList.add('on');lb.setAttribute('aria-hidden','false');BX.focus({preventScroll:true});
+        if(op.semAnim){requestAnimationFrame(()=>requestAnimationFrame(()=>lb.classList.remove('sem-trans')));op.pronto&&op.pronto();return;}
+        if(reduce)return;
+        anim=naTela(f)?QD.animate([daMiniatura(f),CHEIA],{duration:440,easing:EASE}):QD.animate([{opacity:0,transform:'scale(.92)'},{opacity:1,transform:'none'}],{duration:300,easing:EASE});};
+      /* espera a miniatura estar pronta (normalmente instantâneo; no máximo 300 ms) */
+      Promise.race([li.decode?li.decode().catch(()=>{}):Promise.resolve(),new Promise(r=>setTimeout(r,300))]).then(mostra);};
     lb._abre=abre;
+    li.addEventListener('load',()=>{if(!lb.classList.contains('on')||!li.naturalWidth)return;const r=li.naturalWidth/li.naturalHeight;if(Math.abs(r-razao)>.01&&!(anim&&anim.playState==='running')){razao=r;posiciona();aplica();}});
+    addEventListener('resize',()=>{if(lb.classList.contains('on')){posiciona();aplica();}});
     /* ao fechar a foto ampliada, o foco do teclado volta para a foto que foi aberta */
-    const fecha=()=>{if(!lb.classList.contains('on'))return;lb.classList.remove('on');lb.setAttribute('aria-hidden','true');const v=lb._volta;lb._volta=null;v&&v.isConnected&&v.focus({preventScroll:true});};
+    const fecha=()=>{if(!lb.classList.contains('on'))return;const v=++vez,f=lb._volta;lb._volta=null;anim&&anim.cancel();
+      /* recado: some na hora (sem animação) e entrega o retângulo da foto para o aviãozinho sair dali */
+      const op=lb._op;lb._op=null;
+      if(op&&op.aoFechar){const r={left:cx.x,top:cx.y,width:cx.w,height:cx.h};lb.classList.add('sem-trans');lb.classList.remove('on');lb.setAttribute('aria-hidden','true');
+        QD.style.visibility='hidden';li.removeAttribute('src');z=1;px=py=0;aplica();requestAnimationFrame(()=>requestAnimationFrame(()=>lb.classList.remove('sem-trans')));op.aoFechar(r);return;}
+      const fim=()=>{if(v!==vez)return;QD.style.visibility='hidden';anim&&anim.cancel();anim=null;li.removeAttribute('src');z=1;px=py=0;aplica();};
+      if(reduce)fim();
+      else if(z===1&&naTela(f)){anim=QD.animate([CHEIA,daMiniatura(f)],{duration:380,easing:'cubic-bezier(.4,0,.2,1)',fill:'forwards'});anim.onfinish=fim;}
+      else{anim=QD.animate([{opacity:1},{opacity:0,transform:'scale(.94)'}],{duration:240,easing:'ease-out',fill:'forwards'});anim.onfinish=fim;}
+      lb.classList.remove('on');lb.setAttribute('aria-hidden','true');f&&f.isConnected&&f.focus({preventScroll:true});};
     $$('.hist-foto').forEach(f=>{f.addEventListener('click',()=>abre(f));f.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();abre(f);}});});
-    lb.addEventListener('click',fecha);
+    /* arrastar (com zoom) e pinça (celular): só vale o que começa na foto */
+    const dedos=new Map();let ini=null;
+    const marca=()=>{ini={z,px,py,pts:[...dedos.values()].map(p=>({...p}))};};
+    lb.addEventListener('pointerdown',e=>{if(e.target!==li&&!dedos.size){gesto=0;return;}gesto=1;dedos.set(e.pointerId,{x:e.clientX,y:e.clientY});try{lb.setPointerCapture(e.pointerId);}catch(_){}marca();li.classList.add('arrastando');});
+    lb.addEventListener('pointermove',e=>{if(!dedos.has(e.pointerId)||!ini)return;dedos.set(e.pointerId,{x:e.clientX,y:e.clientY});const pts=[...dedos.values()];
+      if(pts.length>=2&&ini.pts.length>=2){const d=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),nz=Math.min(2,Math.max(1,ini.z*d(pts[0],pts[1])/(d(ini.pts[0],ini.pts[1])||1)));
+        px=ini.px*nz/ini.z;py=ini.py*nz/ini.z;z=nz;if(z===1)px=py=0;aplica();}
+      else if(pts.length===1&&z>1){px=ini.px+pts[0].x-ini.pts[0].x;py=ini.py+pts[0].y-ini.pts[0].y;aplica();}});
+    const solta=e=>{if(!dedos.delete(e.pointerId))return;if(dedos.size)marca();else{ini=null;li.classList.remove('arrastando');}};
+    lb.addEventListener('pointerup',solta);lb.addEventListener('pointercancel',solta);
+    li.addEventListener('dragstart',e=>{if(z>1)e.preventDefault();});
+    /* clique que começou na foto (arrastar, pinça) não fecha, mesmo que termine fora dela */
+    lb.addEventListener('click',e=>{const daFoto=gesto;gesto=0;if(e.target===li||ZM.contains(e.target)||(daFoto&&e.target!==BX))return;fecha();});
     document.addEventListener('keydown',e=>{if(e.key==='Escape'&&lb.classList.contains('on')){e.stopImmediatePropagation();fecha();}},true);}
 
   /* Pop-ups de Doações e Divulgação: convite para rolar */
@@ -1866,20 +2101,36 @@ body.lock{overflow:hidden}
           return {titulo:String(a.titulo||''),fotos,pilha:capa?[capa,...fotos.filter(f=>f!==capa)]:[]};}).filter(a=>a.fotos.length);
         monta();})
       .catch(e=>{console.warn('[supabase] galeria sem álbuns:',e.name==='AbortError'?'sem resposta em 8 s':e.message);ALBUNS=[];monta();});
-    const capa=i=>AL.querySelector(`.alb[data-i="${i}"] .alb-pilha .pol:last-child img`);
+    /* polaroide da capa (a moldura branca inteira): as fotos saem dela e voltam para ela */
+    const capa=i=>AL.querySelector(`.alb[data-i="${i}"] .alb-pilha .pol:last-child`);
+    /* durante o voo a foto ganha a moldura de polaroide (mesmas proporções da .pol: 7% nas laterais e em cima, 22% embaixo, medidos na largura) */
+    /* ordem do voo: a foto que está na mesma posição do álbum aberto (álbum 1 → foto 1, álbum 2 → foto 2...) é a ÚLTIMA a pousar
+       ao abrir e a PRIMEIRA a voltar ao fechar. As outras: ao abrir, da primeira para a última; ao fechar, da última para a primeira. */
+    const ordem=(k,i,n,abrindo)=>{const tem=i<n;
+      if(abrindo)return !tem?k:k===i?n-1:k<i?k:k-1;
+      return !tem?n-1-k:k===i?0:1+(n-1-k)-(i>k?1:0);};
+    const MOLDURA=el=>{const k=el.offsetWidth/(el.offsetHeight||1);return `inset(${(7*k).toFixed(2)}% 7% ${(22*k).toFixed(2)}% 7% round 1px)`;},SEM_MOLDURA='inset(0% 0% 0% 0% round 0px)';
     const delta=(de,para)=>{const a=de.getBoundingClientRect(),b=para.getBoundingClientRect();return `translate(${a.left-b.left+(a.width-b.width)/2}px,${a.top-b.top+(a.height-b.height)/2}px) scale(${a.width/b.width}) rotate(-4deg)`;};
     const abre=i=>{if(ocupado)return;ocupado=true;atual=i;const {titulo:n,fotos:f}=ALBUNS[i];NM.textContent=n;
       FO.replaceChildren(...f.map(x=>{const fig=cria('figure','hist-foto');fig.tabIndex=0;fig.setAttribute('role','button');fig.setAttribute('aria-label','Ampliar foto');fig.append(criaImg(x,x.alt));return fig;}));
       AL.querySelectorAll('.alb').forEach(a=>a.getAnimations().forEach(x=>x.cancel()));  /* interrompe o surgimento dos álbuns, se ainda estiver acontecendo */
       BOXG.style.height=BOXG.offsetHeight+'px';  /* trava o pop-up no tamanho que tinha com os álbuns; se o álbum tiver mais fotos, rola por dentro */
+      FO.querySelectorAll('img').forEach(im=>{im.loading='eager';});  /* todas as fotos do álbum começam a baixar já, para não voarem vazias */
       W.classList.add('aberto');reserva(FO);const c=capa(i);
-      [...FO.children].forEach((el,k)=>{const t=delta(c,el);el.animate([{transform:t,opacity:0},{transform:t,opacity:1,offset:.12},{transform:'none',opacity:1}],{duration:reduce?1:720,delay:reduce?0:k*70,easing:'cubic-bezier(.2,.75,.25,1)',fill:'backwards'});});
-      setTimeout(()=>{ocupado=false;},reduce?50:720+f.length*70);BV.focus({preventScroll:true});};
+      [...FO.children].forEach((el,k,todos)=>{const t=delta(c,el),mo=MOLDURA(el),o={duration:reduce?1:760,delay:reduce?0:ordem(k,i,todos.length,true)*70,easing:'cubic-bezier(.2,.75,.25,1)',fill:'backwards'};
+        if(k===i)el.style.zIndex='2';  /* a da mesma posição do álbum é a última a pousar, por cima das outras */
+        /* sai da capa como polaroide e, ao pousar, a moldura some e os cantos arredondam (o ícone de ampliar só aparece depois) */
+        el.classList.add('voando');
+        el.animate([{transform:t,opacity:0,borderRadius:'3px',backgroundColor:'#fff'},{transform:t,opacity:1,borderRadius:'3px',backgroundColor:'#fff',offset:.12},{borderRadius:'3px',backgroundColor:'#fff',offset:.7},{transform:'none',opacity:1,borderRadius:'16px',backgroundColor:'#fff'}],o);
+        el.querySelector('img').animate([{clipPath:mo},{clipPath:mo,offset:.7},{clipPath:SEM_MOLDURA}],o).onfinish=()=>el.classList.remove('voando');});
+      setTimeout(()=>{ocupado=false;},reduce?50:760+f.length*70);BV.focus({preventScroll:true});};
     const volta=(rapido)=>{if(atual===null||ocupado&&!rapido)return;ocupado=true;const i=atual,c=capa(i),els=[...FO.children];
       if(rapido||reduce){FO.innerHTML='';W.classList.remove('aberto','voltando','surgindo');AL.querySelectorAll('.em-foco').forEach(a=>a.classList.remove('em-foco'));BOXG.style.height='';atual=null;ocupado=false;return;}
       BOXG.scrollTop=0;
-      /* as fotos vão sumindo aos poucos enquanto voltam para a capa, e o álbum reaparece ao mesmo tempo */
-      els.forEach((el,k)=>{el.animate([{transform:'none',opacity:1},{opacity:.35,offset:.6},{transform:delta(c,el),opacity:0}],{duration:620,delay:(els.length-1-k)*60,easing:'cubic-bezier(.55,0,.35,1)',fill:'forwards'});});
+      /* cada foto vira polaroide de novo, volta para a capa e entra no álbum, que reaparece ao mesmo tempo */
+      els.forEach((el,k)=>{const mo=MOLDURA(el),o={duration:620,delay:ordem(k,i,els.length,false)*60,easing:'cubic-bezier(.55,0,.35,1)',fill:'forwards'};el.classList.add('voando');
+        el.animate([{transform:'none',opacity:1,borderRadius:'16px',backgroundColor:'#fff'},{transform:'none',borderRadius:'3px',backgroundColor:'#fff',offset:.25},{opacity:1,backgroundColor:'#fff',offset:.85},{transform:delta(c,el),opacity:0,borderRadius:'3px',backgroundColor:'#fff'}],o);
+        el.querySelector('img').animate([{clipPath:SEM_MOLDURA},{clipPath:mo,offset:.25},{clipPath:mo}],o);});
       const foco=AL.querySelector(`.alb[data-i="${i}"]`);foco.classList.add('em-foco');W.classList.add('voltando');
       const tot=620+els.length*60;
       setTimeout(()=>{
@@ -1964,15 +2215,29 @@ body.lock{overflow:hidden}
         e.innerHTML=`<svg viewBox="0 0 60 60" style="display:block;width:100%;height:100%"><path d="${STAR}" fill="${c}" stroke="${c}" stroke-width="4" stroke-linejoin="round"/></svg>`;document.body.appendChild(e);
         const a=Math.random()*6.283,d=40+Math.random()*70,x=Math.cos(a)*d,y=Math.sin(a)*d*.7-14;
         e.animate([{transform:'scale(.3)',opacity:0},{transform:`translate(${x*.6}px,${y*.6}px) scale(1) rotate(90deg)`,opacity:1,offset:.3},{transform:`translate(${x}px,${y+18}px) scale(.4) rotate(200deg)`,opacity:0}],{duration:1500+Math.random()*600,easing:'cubic-bezier(.2,.7,.3,1)'}).onfinish=()=>e.remove();}};
-    const pisca=els=>els.forEach(el=>{el.classList.remove('pisca-ag');void el.offsetWidth;el.classList.add('pisca-ag');setTimeout(()=>estrelas(el),150);setTimeout(()=>el.classList.remove('pisca-ag'),2100);});
+    /* linhas seguidas do mesmo dia (ex.: os dois Evangelhos de quarta) ganham UM destaque só, em volta das duas juntas: com um destaque
+       por linha, os contornos se cruzavam. O destaque é uma moldura (.pisca-caixa) atrás do texto, dentro do dia (li). */
+    const grupos=els=>{const gs=[];els.forEach(el=>{const g=gs[gs.length-1],ult=g&&g[g.length-1];
+      if(ult&&el.classList.contains('at')&&ult.parentElement===el.parentElement&&ult.nextElementSibling===el)g.push(el);else gs.push([el]);});return gs;};
+    const pisca=els=>grupos(els).forEach(g=>{const li=g[0].closest('li');
+      if(!li){const el=g[0];el.classList.remove('pisca-ag');void el.offsetWidth;el.classList.add('pisca-ag');setTimeout(()=>estrelas(el),150);setTimeout(()=>el.classList.remove('pisca-ag'),2100);return;}  /* aviso do Vozes ao Céu */
+      li.querySelectorAll('.pisca-caixa').forEach(x=>x.remove());
+      const lr=li.getBoundingClientRect(),rs=g.map(e=>e.getBoundingClientRect()),cx=document.createElement('span');cx.className='pisca-caixa pisca-ag';cx.setAttribute('aria-hidden','true');
+      const t=Math.min(...rs.map(r=>r.top)),b=Math.max(...rs.map(r=>r.bottom)),l=Math.min(...rs.map(r=>r.left)),d=Math.max(...rs.map(r=>r.right));
+      const fx=6,fy=2;  /* folga em volta do texto (o contorno é por dentro) */
+      cx.style.cssText=`left:${l-lr.left-fx}px;top:${t-lr.top-fy}px;width:${d-l+2*fx}px;height:${b-t+2*fy}px`;li.appendChild(cx);
+      g.forEach(el=>setTimeout(()=>estrelas(el),150));setTimeout(()=>cx.remove(),2100);});
     $$('#atividades .acard').forEach(c=>{const h=c.querySelector('h3');if(!h)return;const k=Object.keys(ALVO).find(x=>h.textContent.trim().startsWith(x));if(!k)return;
-      c.classList.add('acard-link');c.setAttribute('role','button');c.tabIndex=0;
+      /* o título vira um botão de verdade (mesma aparência), para teclado e leitor de tela; com o mouse, o cartão todo continua clicável.
+         (role="button" no <article> não é permitido pelas regras de acessibilidade) */
+      c.classList.add('acard-link');
+      const bt=document.createElement('button');bt.type='button';bt.className='acard-btn';bt.setAttribute('aria-label',h.textContent.trim()+': ver os horários na agenda');
+      bt.append(...h.childNodes);h.append(bt);bt.addEventListener('click',()=>vai());
       const vai=()=>{const els=ALVO[k]();if(!els.length)return;const cel=matchMedia('(max-width:760px)').matches;
         const br=BLOCO.getBoundingClientRect(),hh=altHeader(),fora=br.top<hh-2||br.top>innerHeight*.35;
         if(cel||fora){const y=Math.round(scrollY+br.top-hh-12);window.scrollTo({top:y,behavior:reduce?'auto':'smooth'});let t0=scrollY,parado=0;const esp=()=>{if(Math.abs(scrollY-t0)<1){if(++parado>4){pisca(els);return;}}else parado=0;t0=scrollY;requestAnimationFrame(esp);};setTimeout(()=>requestAnimationFrame(esp),120);}
         else pisca(els);};
-      c.addEventListener('click',e=>{if(e.target.closest('a,button'))return;vai();});
-      c.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();vai();}});});
+      c.addEventListener('click',e=>{if(e.target.closest('a,button'))return;vai();});});
   }
 
   /* Ondas com a mesma textura pontilhada do fundo (Sobre nós, Ações, Contato) */
@@ -2075,8 +2340,24 @@ body.lock{overflow:hidden}
 
   /* Aviãozinho de papel em estilo de desenho infantil: traço de lápis rabiscado que "ferve" (redesenhado a cada ~110ms),
      folha de caderno, verso hachurado com lápis de cor (filtros #lapisCor/#lapisLeve do arco-íris), dobras com "estalo",
-     impulso antes do voo, pirueta com rastro pontilhado e estrelinha no fim. Tudo dentro do bloco do formulário. */
-  function aviaozinho(fim){
+     impulso antes do voo, pirueta com rastro pontilhado e estrelinha no fim. Tudo dentro do bloco do formulário.
+     cfg (opcional, usado pelo recado em tela cheia): caixa, W, H, x0, y0 (centro da folha), s0 (escala inicial), imagem (desenhada na
+     frente da folha, sem as pautas), estrela (aumenta rastro e estrelinha) e aoTerminar(). Em tela cheia, a espessura do traço, o tremido
+     dos filtros de lápis e a hachura são compensados pela escala, para não ficarem grossos. */
+  /* traço de lápis: cada lado vira uma curvinha que passa um pouco das pontas, sorteada a partir de uma semente (aviãozinho e recado) */
+  const rng=s=>()=>{s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};
+  const rabisco=(pts,semente,amp,fechado=true,esc=1)=>{const R=rng(semente);let d='';const n=pts.length;  /* esc: encolhe as pontinhas que passam dos cantos */
+    for(let i=0;i<(fechado?n:n-1);i++){const a=pts[i],b=pts[(i+1)%n],dx=b[0]-a[0],dy=b[1]-a[1],L=Math.hypot(dx,dy);if(L<1)continue;
+      const ux=dx/L,uy=dy/L,nx=-uy,ny=ux,o1=(R()*.9+.2)*Math.min(3.4,L*.1)*esc,o2=(R()*.9+.2)*Math.min(3.4,L*.1)*esc,m=(R()-.5)*2*amp*Math.min(1,L/40);
+      const sx=a[0]-ux*o1+nx*(R()-.5)*amp,sy=a[1]-uy*o1+ny*(R()-.5)*amp,ex=b[0]+ux*o2+nx*(R()-.5)*amp,ey=b[1]+uy*o2+ny*(R()-.5)*amp;
+      d+=`M${sx.toFixed(1)} ${sy.toFixed(1)}Q${((a[0]+b[0])/2+nx*m).toFixed(1)} ${((a[1]+b[1])/2+ny*m).toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}`;}
+    return d;};
+  /* cópia dos filtros de lápis com o tremido e o grão ajustados a uma escala (k<1 = desenho ampliado) */
+  const filtroLapis=(id,novo,k,defs)=>{const o=document.getElementById(id);if(!o)return id;const c=o.cloneNode(true);c.id=novo;
+    c.querySelectorAll('feDisplacementMap').forEach(d=>d.setAttribute('scale',(+d.getAttribute('scale')*k).toFixed(3)));
+    c.querySelectorAll('feTurbulence').forEach(t=>t.setAttribute('baseFrequency',t.getAttribute('baseFrequency').split(/\s+/).map(v=>(+v/k).toFixed(3)).join(' ')));
+    defs.appendChild(c);return novo;};
+  function aviaozinho(fim,cfg){cfg=cfg||{};
     const NS='http://www.w3.org/2000/svg',el=(t,a)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e;};
     // Partes da folha: [corpo, aba1 esq, aba1 dir, aba2 esq, aba2 dir]. Em cada etapa: pontos, opacidade do traço, verso (0 frente, 1 verso)
     const esp=p=>p.map(([x,y])=>[-x,y]);
@@ -2088,34 +2369,30 @@ body.lock{overflow:hidden}
       // dobrada ao meio: aviãozinho de perfil, bico para cima
       [{p:[[0,-85],[3,62],[1,92],[-1,92],[-3,62],[0,-85]],so:1,v:1},{p:[[0,-85],[-6,-12],[-3,8]],so:0,v:1},{p:[[0,-85],[4,-12],[2,8]],so:0,v:1},{p:[[0,-85],[-3,62],[-50,80]],so:1,v:1},{p:[[0,-85],[3,62],[30,84]],so:1,v:0}]
     ];
-    const caixa=form.parentElement,W=caixa.clientWidth,H=caixa.clientHeight;
+    const caixa=cfg.caixa||form.parentElement,W=cfg.W||caixa.clientWidth,H=cfg.H||caixa.clientHeight;
+    const ew=cfg.s0?Math.min(1,.95*1.8/cfg.s0):1,ES=cfg.estrela||1;  /* ew: compensa a escala grande (traço, tremido, hachura) */
     const svg=el('svg',{class:'aviaozinho','aria-hidden':'true',width:W,height:H,viewBox:`0 0 ${W} ${H}`});
-    const defs=el('defs',{}),pat=el('pattern',{id:'svHachura',width:'4.5',height:'4.5',patternUnits:'userSpaceOnUse',patternTransform:'rotate(-38)'});
-    pat.appendChild(el('path',{d:'M-1 2.2H6',stroke:'#6f9fd2','stroke-width':'1.25','stroke-linecap':'round'}));defs.appendChild(pat);
-    const rastro=el('path',{fill:'none',stroke:'#8796b3','stroke-width':'2.2','stroke-linecap':'round','stroke-dasharray':'1.5 8',filter:'url(#lapisLeve)'});
+    const defs=el('defs',{}),hid=cfg.imagem?'svHachuraG':'svHachura',pat=el('pattern',{id:hid,width:(4.5*ew).toFixed(2),height:(4.5*ew).toFixed(2),patternUnits:'userSpaceOnUse',patternTransform:'rotate(-38)'});
+    pat.appendChild(el('path',{d:`M${-ew} ${(2.2*ew).toFixed(2)}H${(6*ew).toFixed(2)}`,stroke:'#6f9fd2','stroke-width':(1.25*ew).toFixed(2),'stroke-linecap':'round'}));defs.appendChild(pat);
+    if(cfg.imagem){const pi=el('pattern',{id:'svRecadoImg',patternUnits:'userSpaceOnUse',x:'-60',y:'-85',width:'120',height:'170'});
+      pi.append(el('rect',{width:'120',height:'170',fill:'#fffdf8'}),el('image',{href:cfg.imagem,width:'120',height:'170',preserveAspectRatio:cfg.razao?'none':'xMidYMid meet'}));defs.appendChild(pi);}
+    const FL=cfg.s0?filtroLapis('lapisLeve','avLeveG',ew,defs):'lapisLeve',FC=cfg.s0?filtroLapis('lapisCor','avCorG',ew,defs):'lapisCor';
+    const rastro=el('path',{fill:'none',stroke:'#8796b3','stroke-width':(2.2*ES).toFixed(1),'stroke-linecap':'round','stroke-dasharray':`${1.5*ES} ${8*ES}`,filter:'url(#lapisLeve)'});
     const voo=el('g',{});svg.append(defs,rastro,voo);
     const TRACO='#3d4f6e';
-    const partes=E[0].map(()=>{const g=el('g',{}),f=el('path',{}),h=el('path',{fill:'url(#svHachura)',filter:'url(#lapisCor)'}),
-      c=el('g',{filter:'url(#lapisLeve)',fill:'none',stroke:TRACO,'stroke-linecap':'round'}),c1=el('path',{'stroke-width':'2.2'}),c2=el('path',{'stroke-width':'1.1',opacity:'.55'});
+    const partes=E[0].map(()=>{const g=el('g',{}),f=el('path',{}),h=el('path',{fill:`url(#${hid})`,filter:`url(#${FC})`}),
+      c=el('g',{filter:`url(#${FL})`,fill:'none',stroke:TRACO,'stroke-linecap':'round'}),c1=el('path',{'stroke-width':(2.2*ew).toFixed(2)}),c2=el('path',{'stroke-width':(1.1*ew).toFixed(2),opacity:'.55'});
       c.append(c1,c2);g.append(f,h,c);voo.appendChild(g);return {f,h,c,c1,c2};});
     // folha de caderno: pautas azuis e margem rosa, feitas a lápis
     const papel=el('g',{filter:'url(#lapisLeve)','stroke-linecap':'round',fill:'none'});
     const pautas=[...Array(6)].map((_,i)=>{const p=el('path',{stroke:'#8fb3d9','stroke-width':'1.4'});papel.appendChild(p);return {p,y:-46+i*17};});
     const margem=el('path',{stroke:'#e58fab','stroke-width':'1.5'});papel.appendChild(margem);
-    voo.insertBefore(papel,voo.children[1]);
+    if(!cfg.imagem)voo.insertBefore(papel,voo.children[1]);
     // estrelinha do fim
     const estrela=el('g',{opacity:'0'}),eF=el('path',{fill:'#f6c94a',filter:'url(#lapisCor)'}),eC=el('path',{fill:'none',stroke:'#c98a1c','stroke-width':'1.8','stroke-linecap':'round',filter:'url(#lapisLeve)'}),eR=el('path',{fill:'none',stroke:'#e0a83a','stroke-width':'1.8','stroke-linecap':'round',filter:'url(#lapisLeve)'});
     estrela.append(eF,eC,eR);svg.appendChild(estrela);
     caixa.appendChild(svg);
 
-    // traço de lápis: cada lado vira uma curvinha que passa um pouco das pontas, sorteada a partir de uma semente
-    const rng=s=>()=>{s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};
-    const rabisco=(pts,semente,amp,fechado=true)=>{const R=rng(semente);let d='';const n=pts.length;
-      for(let i=0;i<(fechado?n:n-1);i++){const a=pts[i],b=pts[(i+1)%n],dx=b[0]-a[0],dy=b[1]-a[1],L=Math.hypot(dx,dy);if(L<1)continue;
-        const ux=dx/L,uy=dy/L,nx=-uy,ny=ux,o1=(R()*.9+.2)*Math.min(3.4,L*.1),o2=(R()*.9+.2)*Math.min(3.4,L*.1),m=(R()-.5)*2*amp*Math.min(1,L/40);
-        const sx=a[0]-ux*o1+nx*(R()-.5)*amp,sy=a[1]-uy*o1+ny*(R()-.5)*amp,ex=b[0]+ux*o2+nx*(R()-.5)*amp,ey=b[1]+uy*o2+ny*(R()-.5)*amp;
-        d+=`M${sx.toFixed(1)} ${sy.toFixed(1)}Q${((a[0]+b[0])/2+nx*m).toFixed(1)} ${((a[1]+b[1])/2+ny*m).toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}`;}
-      return d;};
     const io=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2,mix=(a,b,t)=>a+(b-a)*t;
     const quique=t=>{if(t<=0)return 0;if(t>=1)return 1;const c=1.7,u=t-1;return 1+(c+1)*u*u*u+c*u*u;};
     const dobra=t=>t<=0?0:t>=1?1:quique(io(t));
@@ -2124,13 +2401,13 @@ body.lock{overflow:hidden}
     const desenha=(k,t,sem)=>{const A=E[k],B=E[k+1];partes.forEach((pt,i)=>{
       const pts=A[i].p.map((q,j)=>[mix(q[0],B[i].p[j][0],t),mix(q[1],B[i].p[j][1],t)]);
       const d='M'+pts.map(q=>q[0].toFixed(1)+' '+q[1].toFixed(1)).join('L')+'Z',v=t<.5?A[i].v:B[i].v;
-      pt.f.setAttribute('d',d);pt.f.setAttribute('fill',v?'#deecf8':'#fffdf8');
+      pt.f.setAttribute('d',d);pt.f.setAttribute('fill',v?'#deecf8':(cfg.imagem?'url(#svRecadoImg)':'#fffdf8'));
       pt.h.setAttribute('d',d);pt.h.setAttribute('opacity',v?'.9':'0');
       pt.c.setAttribute('opacity',Math.max(0,Math.min(1,mix(A[i].so,B[i].so,t))).toFixed(2));
-      pt.c1.setAttribute('d',rabisco(pts,sem*31+i*7,1.5));pt.c2.setAttribute('d',rabisco(pts,sem*31+i*7+500,2));});};
+      pt.c1.setAttribute('d',rabisco(pts,sem*31+i*7,1.5*ew,true,ew));pt.c2.setAttribute('d',rabisco(pts,sem*31+i*7+500,2*ew,true,ew));});};
 
     // caminho do voo (curva suave que passa por estes pontos): sai para a direita, faz uma pirueta e some no alto
-    const x0=W*.42,y0=Math.min(H*.52,H-95),cx=v=>Math.min(W-24,Math.max(24,v)),cy=v=>Math.min(H-24,Math.max(20,v));
+    const x0=cfg.x0!=null?cfg.x0:W*.42,y0=cfg.y0!=null?cfg.y0:Math.min(H*.52,H-95),cx=v=>Math.min(W-24,Math.max(24,v)),cy=v=>Math.min(H-24,Math.max(20,v));
     const C=[[x0,y0],[W*.68,y0+H*.07],[W*.86,y0-H*.05],[W*.74,y0-H*.22],[W*.55,y0-H*.16],[W*.6,y0+H*.01],[W*.8,y0-H*.06],[W*.84,H*.22],[W*.88,H*.08]].map(([x,y])=>[cx(x),cy(y)]);
     const am=[];for(let i=0;i<C.length-1;i++){const p0=C[Math.max(0,i-1)],p1=C[i],p2=C[i+1],p3=C[Math.min(C.length-1,i+2)];
       for(let k=0;k<24;k++){const t=k/24,t2=t*t,t3=t2*t;am.push([0,1].map(j=>.5*(2*p1[j]+(-p0[j]+p2[j])*t+(2*p0[j]-5*p1[j]+4*p2[j]-p3[j])*t2+(-p0[j]+3*p1[j]-3*p2[j]+p3[j])*t3)));}}
@@ -2149,8 +2426,8 @@ body.lock{overflow:hidden}
 
     // linha do tempo (ms)
     const T={surge:[0,380],d1:[400,720],d2:[740,1060],d3:[1080,1480],impulso:[1480,1740],voo:[1740,3450],brilho:[3450,4000]};
-    const s0=Math.min(.95,H*.62/170);
-    form.animate([{opacity:1},{opacity:0}],{duration:260,fill:'forwards'}).onfinish=()=>{form.style.visibility='hidden';};
+    const s0=cfg.s0||Math.min(.95,H*.62/170);
+    if(!cfg.caixa)form.animate([{opacity:1},{opacity:0}],{duration:260,fill:'forwards'}).onfinish=()=>{form.style.visibility='hidden';};
     const trilha=[];let ini=null,ultimo={x:x0,y:y0},surgiu=false;
     const passo=agora=>{if(ini===null)ini=agora;const ms=agora-ini,sem=Math.floor(ms/110);
       const fase=(a,b)=>Math.max(0,Math.min(1,(ms-a)/(b-a)));
@@ -2164,10 +2441,11 @@ body.lock{overflow:hidden}
       let x=x0,y=y0,r,sx=1,sy=1,s,op=1;
       if(ms<T.impulso[0]){
         // folha surge com um quique e balança enquanto se dobra; cada dobra "estala" (achata e volta)
-        const ep=quique(fase(...T.surge)),f3=dobra(fase(...T.d3));
+        const ep=cfg.imagem?1:quique(fase(...T.surge)),f3=dobra(fase(...T.d3));  /* recado: a folha já está na tela (é a foto ampliada) */
         y=y0+(1-Math.min(1,ep))*26+3*n2*(1-f3);
-        r=mix(-6+4*n1,a0-14,f3);s=s0*Math.max(0,ep)*mix(1,.6,io(fase(...T.d3)));
-        sx=1+.08*achata;sy=1-.1*achata;op=Math.min(1,fase(...T.surge)*2.5);
+        r=mix(cfg.imagem?(-3+3*n1)*fase(0,T.d1[0]):-6+4*n1,a0-14,f3);  /* recado: começa reta, como a foto estava */s=s0*Math.max(0,ep)*mix(1,.6,io(fase(...T.d3)));
+        /* recado: a folha começa com a proporção exata do cartaz (cfg.razao) e chega ao formato da folha durante a 1ª dobra */
+        sx=(1+.08*achata)*mix(cfg.razao?cfg.razao*170/120:1,1,io(fase(...T.d1)));sy=1-.1*achata;op=cfg.imagem?1:Math.min(1,fase(...T.surge)*2.5);
       }else if(ms<T.voo[0]){
         // impulso: recua um pouco e encolhe, como quem vai ser lançado
         const u=io(fase(...T.impulso));
@@ -2188,15 +2466,115 @@ body.lock{overflow:hidden}
       if(ms>=T.brilho[0]){const fb=fase(...T.brilho),e=fb<.35?quique(fb/.35)*1.1:1.1*(1-io((fb-.35)/.65));
         // quando a estrelinha está no auge, o bloco "Mensagem enviada!" começa a surgir dali
         if(fb>=.3&&!surgiu){surgiu=true;const cr=caixa.getBoundingClientRect();fim({left:cr.left+fimV.x-12,top:cr.top+fimV.y-12,width:24,height:24});}
-        estrela.setAttribute('opacity','1');estrela.setAttribute('transform',`translate(${fimV.x.toFixed(1)} ${fimV.y.toFixed(1)}) rotate(${(fb*110).toFixed(1)}) scale(${Math.max(0,e).toFixed(3)})`);
+        estrela.setAttribute('opacity','1');estrela.setAttribute('transform',`translate(${fimV.x.toFixed(1)} ${fimV.y.toFixed(1)}) rotate(${(fb*110).toFixed(1)}) scale(${Math.max(0,e*ES).toFixed(3)})`);
         eC.setAttribute('d',rabisco(pontas,sem*7+3,1));
         eR.setAttribute('d',[0,1,2,3].map(i=>{const a=i*Math.PI/2+Math.PI/4;return rabisco([[Math.cos(a)*14,Math.sin(a)*14],[Math.cos(a)*20,Math.sin(a)*20]],sem*5+i,.8,false);}).join(''));}
-      if(ms<T.brilho[1])requestAnimationFrame(passo);else{svg.remove();if(!surgiu)fim();}
+      if(ms<T.brilho[1])requestAnimationFrame(passo);else{svg.remove();if(!surgiu)fim();cfg.aoTerminar&&cfg.aoTerminar();}
     };
     requestAnimationFrame(passo);
   }
   $('#newMsg').onclick=()=>{form.reset();resetForm();};
   $$('.field input,.field textarea').forEach(el=>el.addEventListener('input',()=>el.parentElement.classList.remove('err')));
+
+  /* Recado ao abrir o site: envelope em desenho de lápis de cor, flutuando, com o traço "fervendo" (rabisco redesenhado a cada 110ms
+     e filtros #lapisCor/#lapisLeve). Toque no envelope: a aba abre, a carta dobrada em três sobe, o envelope cai e a carta se desdobra
+     exatamente onde a foto ampliada vai ficar; aí a foto ampliada (#lightbox, com X e zoom) assume, no mesmo tom de fundo dos pop-ups.
+     Fechar (X, fora ou Esc) com a foto aberta: a carta vira o aviãozinho do formulário, em tamanho de tela cheia, e voa.
+     Fechar antes de abrir: o envelope só some. Aparece toda vez que o site abre, até a data em RECADO.ate (inclusive).
+     Para trocar o recado: nova imagem em img/, e atualizar img, larg, alt (medidas do arquivo), ate e descricao (texto para leitores de tela). */
+  const RECADO={img:'img/recesso-2026.jpg',larg:900,alt:1600,ate:'2027-02-14',
+    descricao:'Recesso e retornos. 2026 está acabando, confira nossas datas de encerramento e retorno das atividades. Mãos Unidas: entrega de novembro em 28/11 às 13h30 e entrega de dezembro em 19/12 às 14h. Evangelização: encerramento em 12/12; planejamento dos evangelizadores em 19/12, 30/01 e 06/02; retorno com as crianças em 13/02. Estudo dos Evangelizadores: encerramento em 13/12 e retorno em 14/02. Estudo de segunda: encerramento em 14/12 e retorno em 18/01. Estudo de Mediunidade: encerramento em 18/12 e retorno em 22/01. Atividades que não param: Evangelho no Lar Online, toda segunda-feira às 9h pelo YouTube; Roda de conversa, toda quarta-feira em dois horários, às 9h e às 20h.'};
+  {const dh=new Date(),hoje=dh.getFullYear()+'-'+String(dh.getMonth()+1).padStart(2,'0')+'-'+String(dh.getDate()).padStart(2,'0');
+   const lb=$('#lightbox');
+   if(hoje<=RECADO.ate&&lb&&lb._abre){
+    const pre=new Image();pre.decoding='async';pre.src=RECADO.img;  /* já vai baixando enquanto o envelope flutua */
+    const NS='http://www.w3.org/2000/svg',el=(t,a,pai)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(pai)pai.appendChild(e);return e;};
+    const TRACO='#3d4f6e';
+    const ov=document.createElement('div');ov.className='recado';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-label','Uma mensagem importante para você');
+    const tras=el('svg',{class:'recado-svg','aria-hidden':'true'}),frente=el('svg',{class:'recado-svg','aria-hidden':'true'});
+    const carta=document.createElement('div');carta.className='recado-carta';carta.setAttribute('aria-hidden','true');
+    const abrir=document.createElement('button');abrir.type='button';abrir.className='recado-abrir';abrir.setAttribute('aria-label','Abrir a mensagem importante');
+    const bx=document.createElement('button');bx.type='button';bx.className='recado-x';bx.setAttribute('aria-label','Fechar');
+    bx.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>';  /* ícone fixo, escrito aqui mesmo */
+    ov.append(tras,carta,frente,abrir,bx);
+    /* hachuras de lápis de cor */
+    const defs=el('defs',{},frente);
+    [['rcH1','#f2b27a'],['rcH2','#ec9bb5'],['rcH3','#d9b56a']].forEach(([id,cor])=>{const p=el('pattern',{id,width:'6',height:'6',patternUnits:'userSpaceOnUse',patternTransform:'rotate(-38)'},defs);el('path',{d:'M-1 3H7',stroke:cor,'stroke-width':'1.5','stroke-linecap':'round'},p);});
+    const gT=el('g',{},tras),gF=el('g',{},frente);
+    /* cada forma: cor de fundo + hachura + contorno duplo rabiscado (o segundo, mais claro) */
+    const forma=(pai,cor,hid,tr)=>{const g=el('g',{},pai),f=el('path',{fill:cor},g),h=el('path',{fill:`url(#${hid})`,filter:'url(#lapisCor)',opacity:'.8'},g),
+        c=el('g',{filter:'url(#lapisLeve)',fill:'none',stroke:tr||TRACO,'stroke-linecap':'round','stroke-linejoin':'round'},g),c1=el('path',{'stroke-width':'2.4'},c),c2=el('path',{'stroke-width':'1.2',opacity:'.5'},c);
+      return {g,set(pts,sem){const d='M'+pts.map(q=>q[0].toFixed(1)+' '+q[1].toFixed(1)).join('L')+'Z';f.setAttribute('d',d);h.setAttribute('d',d);c1.setAttribute('d',rabisco(pts,sem,1.6));c2.setAttribute('d',rabisco(pts,sem+500,2.2));}};};
+    const dentro=forma(gT,'#f3dfb4','rcH3'),abaT=forma(gT,'#f7e4bd','rcH3');  /* atrás da carta: fundo do envelope e aba já aberta */
+    const bolso=forma(gF,'#fff1d2','rcH1'),abaF=forma(gF,'#ffe9bf','rcH2'),selo=forma(gF,'#ec5f84','rcH2','#a8324f');
+    const txt=el('g',{filter:'url(#lapisLeve)',transform:'rotate(-2)'},gF);
+    ['Uma mensagem','importante para você'].forEach((l,i)=>{el('text',{x:'0',y:String(60+i*30),'text-anchor':'middle','font-family':'Caveat, cursive','font-weight':'700','font-size':'29',fill:'#2b3f63'},txt).textContent=l;});
+    const dica=el('text',{x:'0',y:'146','text-anchor':'middle','font-family':'Caveat, cursive','font-weight':'600','font-size':'22',fill:'#fff6dc'},gF);dica.textContent='Toque no envelope para abrir';
+    /* medidas do envelope (unidades): 300 × 200, centro em 0,0 */
+    const RET=[[-150,-100],[150,-100],[150,100],[-150,100]],BOLSO=[[-150,-100],[0,18],[150,-100],[150,100],[-150,100]];
+    const CORACAO=[...Array(28)].map((_,i)=>{const t=i/28*2*Math.PI;return [13.6*Math.pow(Math.sin(t),3),-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t))*.85];});
+    const io=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2,sai=t=>1-Math.pow(1-t,3),mix=(a,b,t)=>a+(b-a)*t;
+    const quique=t=>{if(t<=0)return 0;if(t>=1)return 1;const c=1.7,u=t-1;return 1+(c+1)*u*u*u+c*u*u;};
+    const volta=t=>{if(t<=0)return 0;if(t>=1)return 1;const c=1.2,u=t-1;return 1+(c+1)*u*u*u+c*u*u;};
+    let fase='entrando',t0=0,tc=0,raf=0,R=null,P1=null,cima=null,baixo=null,focoAntes=null;
+    const geo=()=>{const W=innerWidth,H=innerHeight,envW=Math.min(W*.8,440),k=envW/300;return {W,H,k,cx:W/2,cy:H/2-envW*.04};};
+    /* carta dobrada em três (HTML com 3D): o painel de cima e o de baixo começam dobrados por cima do meio, mostrando o verso hachurado */
+    const montaCarta=()=>{R=lb._mede(RECADO.larg/RECADO.alt);const a=Math.round(R.h/3),b=Math.round(R.h*2/3);
+      Object.assign(carta.style,{left:R.x+'px',top:R.y+'px',width:R.w+'px',height:R.h+'px'});carta.replaceChildren();
+      const painel=(cls,topo,alt,pos,verso)=>{const p=document.createElement('div');p.className='rc-painel '+cls;Object.assign(p.style,{top:topo+'px',height:alt+'px'});
+        const fr=document.createElement('div');fr.className='rc-face rc-frente';Object.assign(fr.style,{backgroundImage:`url("${RECADO.img}")`,backgroundSize:`${R.w}px ${R.h}px`,backgroundPosition:`0 ${-pos}px`});p.appendChild(fr);
+        if(verso){const v=document.createElement('div');v.className='rc-face rc-verso';p.appendChild(v);}carta.appendChild(p);return p;};
+      painel('rc-meio',a,b-a,a,false);cima=painel('rc-cima',0,a,0,true);baixo=painel('rc-baixo',b,R.h-b,b,true);P1=null;};
+    const quadro=agora=>{const g=geo(),t=agora-t0,sem=reduce?1:Math.floor(t/110);
+      [tras,frente].forEach(s=>{s.setAttribute('width',g.W);s.setAttribute('height',g.H);s.setAttribute('viewBox',`0 0 ${g.W} ${g.H}`);});
+      let bob=reduce?0:Math.sin(t/800)*9,rot=reduce?0:Math.sin(t/1150)*2.2,desce=0,opEnv=1,tip=30,ly=10,verCarta=false,corOp=1,A1=-180,A2=180,u4=0,opDica=reduce?1:.6+.4*Math.sin(t/420);
+      if(fase==='entrando'){const u=Math.min(1,t/900);desce=-(1-quique(u))*g.H*.6;if(u>=1)fase='flutuando';}
+      if(fase==='abrindo'){const ms=agora-tc,f=(a,b)=>Math.max(0,Math.min(1,(ms-a)/(b-a))),calma=1-io(f(0,300));
+        bob*=calma;rot*=calma;opDica=Math.max(0,1-f(0,200));
+        tip=mix(30,-235,io(f(0,520)));corOp=1-f(0,180);
+        ly=mix(10,-205,sai(f(380,1150)));verCarta=ms>150;
+        desce=io(f(1150,1750))*g.H*.8;opEnv=1-f(1300,1750);rot+=io(f(1150,1750))*10;
+        u4=io(f(1150,1750));A1=-180*(1-volta(f(1750,2350)));A2=180*(1-volta(f(2250,2850)));
+        if(ms>=2900){entrega();return;}}
+      const ey=g.cy+bob+desce,tr=`translate(${g.cx.toFixed(1)} ${ey.toFixed(1)}) rotate(${rot.toFixed(2)}) scale(${g.k.toFixed(3)})`;
+      gT.setAttribute('transform',tr);gF.setAttribute('transform',tr);gT.setAttribute('opacity',opEnv.toFixed(2));gF.setAttribute('opacity',opEnv.toFixed(2));
+      dentro.set(RET,sem*3+1);bolso.set(BOLSO,sem*3+2);
+      const atras=tip<-100,aba=[[-150,-100],[150,-100],[0,tip]];abaT.g.style.display=atras?'':'none';abaF.g.style.display=atras?'none':'';(atras?abaT:abaF).set(aba,sem*3+3);
+      selo.g.setAttribute('opacity',corOp.toFixed(2));if(corOp>0)selo.set(CORACAO.map(([x,y])=>[x,y+tip-14]),sem*3+4);
+      dica.setAttribute('opacity',opDica.toFixed(2));
+      Object.assign(abrir.style,{left:(g.cx-150*g.k)+'px',top:(ey-100*g.k)+'px',width:(300*g.k)+'px',height:(200*g.k)+'px'});
+      if(R){carta.style.visibility=verCarta?'visible':'hidden';
+        const rad=rot*Math.PI/180,noEnv={x:g.cx-Math.sin(rad)*ly*g.k,y:ey+Math.cos(rad)*ly*g.k,s:250*g.k/R.w,r:rot};
+        if(u4>0&&!P1)P1=noEnv;const de=P1||noEnv,fx=R.x+R.w/2,fy=R.y+R.h/2;
+        const x=mix(de.x,fx,u4),y=mix(de.y,fy,u4),s=mix(de.s,1,u4),r=mix(de.r,0,u4);
+        carta.style.transform=`translate(${(x-fx).toFixed(1)}px,${(y-fy).toFixed(1)}px) rotate(${r.toFixed(2)}deg) scale(${s.toFixed(4)})`;
+        cima.style.transform=`translateZ(${(2*Math.abs(A1)/180).toFixed(2)}px) rotateX(${A1.toFixed(1)}deg)`;
+        baixo.style.transform=`translateZ(${(Math.abs(A2)/180).toFixed(2)}px) rotateX(${A2.toFixed(1)}deg)`;}
+      raf=requestAnimationFrame(quadro);};
+    const acaba=()=>{cancelAnimationFrame(raf);fase='fim';ov.remove();document.removeEventListener('keydown',esc,true);document.body.classList.remove('lock');
+      focoAntes&&focoAntes.isConnected&&focoAntes.focus&&focoAntes.focus({preventScroll:true});};
+    /* fechar antes de a foto aparecer: o envelope só some */
+    const fechaRapido=()=>{if(fase!=='entrando'&&fase!=='flutuando'&&fase!=='abrindo')return;fase='fechando';
+      ov.animate([{opacity:1},{opacity:0}],{duration:reduce?1:320,fill:'forwards'}).onfinish=acaba;};
+    /* fim do desdobrar: a foto ampliada assume (com X e zoom); o recado some no mesmo instante, por baixo dela */
+    const entrega=()=>{cancelAnimationFrame(raf);fase='imagem';
+      const fig=document.createElement('figure'),im=new Image();im.src=RECADO.img;im.alt=RECADO.descricao;im.width=RECADO.larg;im.height=RECADO.alt;im.dataset.download='permitido';fig.append(im);
+      lb._abre(fig,{semAnim:true,pronto:()=>{ov.hidden=true;},aoFechar:voa});};
+    /* fechar com a foto aberta: a carta vira o aviãozinho, do tamanho da tela, e o fundo clareia enquanto ele voa */
+    const voa=r=>{fase='voando';ov.hidden=false;ov.classList.add('voando');ov.style.pointerEvents='none';
+      if(reduce){acaba();return;}
+      ov.animate([{backgroundColor:'rgba(10,24,44,.88)'},{backgroundColor:'rgba(10,24,44,0)'}],{delay:1400,duration:2000,easing:'ease-in-out',fill:'forwards'});
+      setTimeout(()=>document.body.classList.remove('lock'),1400);
+      aviaozinho(()=>{},{caixa:ov,W:innerWidth,H:innerHeight,x0:r.left+r.width/2,y0:r.top+r.height/2,s0:r.height/170,imagem:RECADO.img,razao:RECADO.larg/RECADO.alt,estrela:2.4,aoTerminar:acaba});};
+    const esc=e=>{if(e.key==='Escape'&&(fase==='entrando'||fase==='flutuando'||fase==='abrindo')){e.stopImmediatePropagation();fechaRapido();}};
+    abrir.addEventListener('click',()=>{if(fase!=='entrando'&&fase!=='flutuando')return;
+      if(reduce){entrega();return;}
+      fase='abrindo';tc=performance.now();montaCarta();abrir.style.display='none';bx.focus({preventScroll:true,focusVisible:false});});
+    ov.addEventListener('click',e=>{if(e.target===abrir)return;fechaRapido();});  /* X ou fora do envelope */
+    setTimeout(()=>{focoAntes=document.activeElement;document.body.appendChild(ov);document.body.classList.add('lock');document.addEventListener('keydown',esc,true);
+      if(!reduce)ov.animate([{opacity:0},{opacity:1}],{duration:350});
+      t0=performance.now();raf=requestAnimationFrame(quadro);abrir.focus({preventScroll:true,focusVisible:false});},500);  /* foco sem a moldura de teclado (aparece se a pessoa usar o Tab) */
+   }}
 
   /* Céu estrelado */
   const CORES=['#f2c230','#ee8b3a','#7faa46','#c2407e','#e0393e','#f7f4e8'];

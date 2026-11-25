@@ -4,6 +4,7 @@
 CLAUDE.md
 SUPABASE-DRIVE.md
 .claude/
+.mcp.json
 
 # Configurações do editor (contêm caminhos deste computador)
 .vscode/
